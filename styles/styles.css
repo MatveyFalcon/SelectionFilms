@@ -1,3 +1,592 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:278edc9530fac0ef0a88bfdcb8db8de59d2dd70ef407ec5233f35abf14be2207
-size 9782
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  height: 835px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%);
+  object-fit: cover;
+  z-index: -1;
+  animation: opacityBg 1s ease-in-out;
+}
+
+.container {
+  position: relative;
+  width: 1158px;
+  max-width: 100%;
+  padding: 0 15px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.sections {
+  position: absolute;
+  left: 45%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 25px;
+  top: 37px;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in-out 1s forwards;
+}
+
+.section-link {
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: white;
+  transition: text-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.section-link:hover {
+  text-shadow: 0px 0px 1px #ffffff;
+  transform: scale(1.03); /* Опционально, для увеличения размера */
+}
+
+.logo {
+  margin-top: 30px;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+  animation: slideDown 1s ease-in-out;
+}
+
+.text {
+  margin-top: 137px;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-in-out 1s forwards;
+}
+
+.auth-buttons {
+  position: absolute;
+  top: 24px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: bold;
+  font-size: 16px;
+  animation: slideDown 1s ease-in-out;
+}
+
+.register-button {
+  position: relative;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.register-button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: width 0.5s ease-in-out, left 0.5s ease-in-out;
+}
+
+.register-button:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.register-button::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  transform-origin: center;
+  transform: scaleX(0);
+  transition: transform 0.5s ease-in-out;
+}
+
+.register-button:hover::before {
+  transform: scaleX(1);
+}
+
+.login-button {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 11px 24px;
+  border: 2px solid white;
+  border-radius: 30px;
+  transition: color 0.5s ease, background-color 0.5s ease, box-shadow 0.7s ease,
+    transform 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #ffffff;
+  color: #000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.white-block {
+  width: 100%;
+  height: 986px;
+  background-color: white;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.white-block h1 {
+  font-family: "Playfair Display", serif;
+  font-weight: bold;
+  font-size: 100px;
+  color: #5e1136;
+  top: 60px;
+  margin-bottom: 0px;
+  letter-spacing: 9px;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.plashka {
+  background-image: url(../images/Plashka.svg);
+  width: 844px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  animation: slideInLeft 1.5s ease-in-out 1s forwards;
+}
+
+.plashka h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+  margin-left: 35px;
+  letter-spacing: 2px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.line {
+  margin-top: 72px;
+  height: 10px;
+  width: 70px;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn 1.5s ease-in-out 1s forwards;
+}
+
+.line-text {
+  display: flex;
+  gap: 42px;
+}
+
+.line-text p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 25px;
+  font-weight: normal;
+  margin-top: 51px;
+  color: black;
+  margin-bottom: 42px;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.groupFilms {
+  width: 1128px;
+  user-select: none;
+  pointer-events: none;
+  animation: zoomIn 1.2s ease-in-out;
+}
+
+.text-login{
+  color: #808080;
+  font-size: 25px;
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.text-login1{
+  color: #808080;
+  font-size: 25px;
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 12px;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+
+.test-button {
+  text-decoration: none;
+  background-color: #e9738f;
+  color: white;
+  padding: 25px 50px;
+  font-size: 35px;
+  font-weight: bold;
+  border-radius: 50px;
+  animation: fadeIn 1s ease-in-out;
+  transition: background-color 0.3s ease, box-shadow 0.7s ease, transform 0.3s ease;
+}
+
+.test-button:hover {
+  transform: scale(1.05);
+  background-color: #c9506c;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.center {
+  margin-top: 67px;
+  text-align: center;
+}
+
+.center1 {
+  text-align: center;
+}
+
+.arrow-icon {
+  transition: transform 0.6s ease;
+  display: block; /* Убирает пробелы вокруг изображения */
+  margin: 0; /* Убираем любые отступы */
+}
+
+.arrow-icon:hover {
+  transform: translateY(10px);
+}
+
+.arrow_a {
+  display: inline-block; /* Устанавливает ширину и высоту под размер содержимого */
+  margin-top: 130px;
+  margin-left: 160px;
+}
+
+.arrow1 {
+  opacity: 0;
+  animation: arrow 0.8s ease-in-out 1s forwards;
+}
+
+.up {
+  top: 100px;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-910px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-70px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes textPop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes opacityBg {
+  0% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes arrow {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.recommendations-title {
+  font-family: "Playfair Display", serif;
+  font-size: 100px;
+  color: #5e1136;
+  text-align: center;
+  margin-bottom: 40px;
+  margin-top: 83px;
+  animation: fadeInUp 1.5s ease-in-out;
+  animation-play-state: paused;
+}
+
+.film-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  animation: zoomIn 1.2s ease-in-out;
+}
+/*
+.film-placeholder {
+  width: 100%; 
+  height: auto; 
+  object-fit: cover; 
+  user-select: none;
+  pointer-events: none;
+}*/
+
+
+.film-card {
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.film-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.film-title {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.film-genre,
+.film-type,
+.film-duration,
+.film-series {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.show-more-button {
+  font-family: "Montserrat", sans-serif;
+  background-color: #e9738f;
+  color: white;
+  border: none;
+  padding: 25px 50px;
+  font-size: 35px;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  display: block;
+  margin: 40px auto 83px;
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.7s ease;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.show-more-button:hover {
+  background-color: #c9506c;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-prompt {
+  text-align: center;
+  font-size: 25px;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: normal;
+  color: #808080;
+  margin-bottom: 42px;
+  justify-content: center;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.login-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 40px auto;
+  width: 100%;
+}
+
+.login-img {
+  user-select: none;
+  pointer-events: none;
+  width: 1128px;
+  animation: zoomIn 1.2s ease-in-out;
+}
+
+.login-promt-button {
+  text-align: center;
+  justify-content: center;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 35px;
+  padding: 25px 50px;
+  background-color: #e9738f;
+  border-radius: 50px;
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.7s ease;
+  animation: fadeIn 1s ease-in-out;
+  visibility: visible;
+}
+
+.login-promt-button:hover {
+  background-color: #c9506c;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.collapse-button {
+  font-family: "Montserrat", sans-serif;
+  background-color: #e9738f;
+  color: white;
+  border: none;
+  padding: 25px 50px;
+  font-size: 35px;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  display: block;
+  margin: 40px auto 83px;
+  align-items: center;
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.7s ease;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.collapse-button:hover {
+  background-color: #c9506c;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.white-block1 {
+  width: 100%;
+  height: 128px;
+  background-color: white;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.check-rst {
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.check-button {
+  position: relative;
+  color: #e9738f;
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.check-button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #e9738f;
+  transition: width 0.5s ease-in-out, left 0.5s ease-in-out;
+}
+
+.check-button:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.check-button::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #e9738f;
+  transform-origin: center;
+  transform: scaleX(0);
+  transition: transform 0.5s ease-in-out;
+}
+
+.check-button:hover::before {
+  transform: scaleX(1);
+}
