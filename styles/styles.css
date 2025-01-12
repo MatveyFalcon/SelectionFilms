@@ -9,6 +9,7 @@ body {
   font-optical-sizing: auto;
   font-weight: normal;
   font-style: normal;
+  background-color: #FAFAFA;
 }
 
 .banner {
@@ -158,7 +159,7 @@ body {
 .white-block {
   width: 100%;
   height: 986px;
-  background-color: white;
+  background-color: #FAFAFA;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -240,18 +241,19 @@ body {
   color: #808080;
   font-size: 25px;
   text-align: center;
-  margin-top: 40px;
+  margin-top: 12px;
   margin-bottom: 12px;
   animation: fadeInUp 1.5s ease-in-out;
 }
-
 
 .test-button {
   text-decoration: none;
   background-color: #e9738f;
   color: white;
+  display: inline-block;
   padding: 25px 50px;
   font-size: 35px;
+  margin-top: 40px;
   font-weight: bold;
   border-radius: 50px;
   animation: fadeIn 1s ease-in-out;
@@ -259,13 +261,21 @@ body {
 }
 
 .test-button:hover {
-  transform: scale(1.05);
   background-color: #c9506c;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+/* Эффект при нажатии */
+.test-button:active {
+  background-color: #a73b56;
+  transform: scale(1); /* Сжатие при нажатии */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.1s ease, box-shadow 0.1s ease, transform 0.1s ease;
 }
 
 .center {
-  margin-top: 67px;
+  margin-top: 40px;
   text-align: center;
 }
 
@@ -490,6 +500,7 @@ body {
 }
 
 .login-promt-button {
+  display: inline-block;
   text-align: center;
   justify-content: center;
   text-decoration: none;
@@ -538,7 +549,7 @@ body {
 .white-block1 {
   width: 100%;
   height: 128px;
-  background-color: white;
+  background-color: #FAFAFA;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -551,7 +562,7 @@ body {
   position: relative;
   color: #e9738f;
   font-size: 25px;
-  font-weight: bold;
+  font-weight: bolder;
   margin-bottom: 40px;
   text-decoration: none;
   cursor: pointer;
@@ -564,7 +575,7 @@ body {
   bottom: 0;
   left: 50%;
   width: 0;
-  height: 2px;
+  height: 3px;
   background-color: #e9738f;
   transition: width 0.5s ease-in-out, left 0.5s ease-in-out;
 }
@@ -580,7 +591,7 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 3px;
   background-color: #e9738f;
   transform-origin: center;
   transform: scaleX(0);

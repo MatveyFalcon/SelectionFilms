@@ -1,3 +1,4 @@
+/* Общие стили для страницы */
 body {
   margin: 0;
   padding: 0;
@@ -5,7 +6,8 @@ body {
   font-optical-sizing: auto;
   font-weight: normal;
   font-style: normal;
-  background-color: #FAFAFA;
+  background-image: url(../images/Фон\ вход.jpg);
+  color: #333;
 }
 
 /* Шапка */
@@ -79,121 +81,97 @@ body {
   transform: scale(1.05);
 }
 
-/* Основное содержимое */
 .content {
-  margin: 25px auto 20px; /* Отступ от фиксированной шапки */
-  max-width: 100%;
-  width: 1158px;
-  padding: 20px;
-  box-sizing: border-box;
-  margin-bottom: 100px;
+  max-width: 500px;
+  margin: 250px auto;
+  background: linear-gradient(135deg, #ffffff, #f4f6fa);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 1s ease-in-out;
 }
 
-/* Заголовок рекомендаций */
-.recommendations-title {
+h1 {
   font-family: "Playfair Display", serif;
-  font-size: 100px;
+  font-size: 50px;
   color: #5e1136;
   text-align: center;
-  margin-bottom: 0px;
-  margin-top: 130px;
-  animation: fadeInUp 1.5s ease-in-out;
-}
-
-/* Контейнер для карточек фильмов */
-.film-cards-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  animation: zoomIn 1.2s ease-in-out;
-}
-
-/* Карточка фильма */
-.film-card {
-  background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.film-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Название фильма */
-.film-title {
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-/* Информация о фильме */
-.film-duration {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 5px;
-}
-
-/* Сообщение об отсутствии результатов */
-.no-results {
-  text-align: center;
-  color: #666;
-  font-size: 18px;
+  margin-bottom: 30px;
   margin-top: 0px;
-  animation: fadeInUp 1.5s ease-in-out;
 }
 
-/* Контейнер для всех попыток */
-.attempts-container {
+/* Стили для полей формы */
+form {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  margin-top: 30px;
 }
 
-/* Заголовок для попытки */
-.attempt-title {
-  font-size: 30px;
-  font-weight: bold;
-  color: #e9738f;
-  margin-bottom: 20px;
-  border-left: 5px solid #e9738f;
-  padding-left: 10px;
-  margin-top: 40px;
-  opacity: 0;
-  animation: slideInLeft 1s ease-in-out 1s forwards;
+label {
+  margin-bottom: 8px;
+  display: block;
+  font-size: 18px;
+  color: #333;
 }
 
-.showButton {
-  padding: 25px 50px;
+select {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fdfdfd;
+  color: #555;
+  width: 500px;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+select:focus {
+  border-color: #e9738f;
+  outline: none;
+  background: #fff;
+  box-shadow: 0 0 5px rgba(233, 115, 143, 0.5);
+}
+
+/* Кнопка отправки */
+button {
+  width: 300px;
+  padding: 15px;
   text-align: center;
   justify-content: center;
-  font-size: 35px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  margin-top: 20px;
   font-weight: bold;
   color: white;
   background-color: #e9738f;
   border: none;
-  border-radius: 50px;
+  border-radius: 30px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease,
     box-shadow 0.7s ease;
-  animation: fadeInUp 1s ease-in-out;
 }
 
-.showButton:hover {
+button:hover {
   background-color: #c9506c;
   transform: scale(1.05); /* Увеличение кнопки при наведении */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.centre {
-  text-align: center;
-  margin-top: 40px;
+button:active {
+  background-color: #a73b56;
+  transform: scale(1); /* Сжатие при нажатии */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.1s ease, box-shadow 0.1s ease,
+    transform 0.1s ease;
 }
 
-/* Анимации */
+/* Дополнительные стили для скрытых вопросов */
+.d-none {
+  display: none;
+}
+
+/* Анимация для появления формы */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -202,17 +180,6 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -225,13 +192,15 @@ body {
   }
 }
 
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-400px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+/* Стили для полей с плейсхолдерами */
+select::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+.d-block {
+  margin-top: 20px;
+  visibility: visible;
+  opacity: 1;
+  animation: fadeInUp 1.5s ease-in-out;
 }

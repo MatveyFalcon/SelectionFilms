@@ -1,3 +1,169 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:458fa7a7652a106fc12a80320969fb592c9fb5559294df7f84d1a7416fa35db7
-size 3449
+* {
+    box-sizing: border-box;
+}
+
+
+/* Общие стили */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url(../images/Фон\ вход.jpg);
+}
+
+/* Шапка */
+.header {
+  background-color: #5e1136;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Контейнер шапки */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1158px;
+  padding: 0 6px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.logo {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  max-width: 120px;
+  user-select: none;
+  pointer-events: none;
+  animation: slideDown 1s ease-in-out;
+}
+
+/* Кнопка "Назад" */
+.back-button {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 11px 24px;
+  border: 2px solid white;
+  border-radius: 30px;
+  transition: color 0.5s ease, background-color 0.5s ease, box-shadow 0.7s ease, transform 0.3s ease;
+  margin-right: 15px;
+  animation: slideDown 1s ease-in-out;
+}
+
+.back-button:hover {
+  color: #5e1136;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+/* Контейнер формы */
+.container1 {
+  max-width: 480px;
+  margin: 160px auto 0;
+  padding: 40px;
+  background: linear-gradient(135deg, #ffffff, #f4f6fa);
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container1 h1 {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: bold;
+  font-style: normal;
+  font-size: 50px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  color: #5e1136;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* Поля формы */
+.auth-form label {
+  display: block;
+  text-align: left;
+  font-size: 16px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  color: #555;
+}
+
+.auth-form input,
+.auth-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fdfdfd;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+  border-color: #e9738f;
+  outline: none;
+  background: #fff;
+  box-shadow: 0 0 5px rgba(233, 115, 143, 0.5);
+}
+
+/* Кнопка отправки */
+.auth-button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: #e9738f;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.7s ease;
+}
+
+.auth-button:hover {
+  background-color: #C9506C;
+  transform: scale(1.05); /* Увеличение кнопки при наведении */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-70px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

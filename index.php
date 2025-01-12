@@ -55,7 +55,6 @@ if ($userId) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Подборка фильмов</title>
   <link rel="stylesheet" href="styles/styles.css" />
-  <link rel="stylesheet" href="styles/modal.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="js/animation.js"></script>
 </head>
@@ -106,14 +105,14 @@ if ($userId) {
         <img src="images/Group 6.png" alt="Фильмы" class="groupFilms" />
         <?php if (!$userId): ?>
           <!-- Пользователь не авторизован -->
-          <p class="text-login">Войдите, чтобы пройти тестирование.</p>
+          <p class="text-login">Войдите, чтобы пройти тестирование!</p>
           <div class="center">
             <a href="login.php" class="login-promt-button">Войти</a>
           </div>
         <?php elseif ($testScore > 0): ?>
           <!-- Пользователь прошел тест хотя бы раз -->
           <div>
-            <div class="center">
+            <div class="center1">
               <a href="testing.php" class="test-button">Пройти тестирование</a>
             </div>
             <p class="text-login1">Вы прошли тестирование <?= $testScore ?> раз(а).</p>
@@ -125,7 +124,7 @@ if ($userId) {
           </div>
         <?php else: ?>
           <!-- Пользователь авторизован, но не прошел тест -->
-          <div class="center">
+          <div class="center1">
             <a href="testing.php" class="test-button">Пройти тестирование</a>
           </div>
         <?php endif; ?>
@@ -136,10 +135,6 @@ if ($userId) {
   <section id="recommendations">
     <?php include 'recommendations.php'; ?>
   </section>
-  <script src="js/modal.js"></script>
-  <script>
-
-  </script>
 </body>
 
 </html>

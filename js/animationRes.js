@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const animatedElements = document.querySelectorAll(
-    ".text, .line, .arrow1, .sections, .plashka, .white-block h1, .line-text p, .groupFilms, .test-button, .text-login, .recommendations-title, .login-promt-button, .login-img, .login-prompt, .film-cards-container, .check-rst, .text-login1, .recommendations-title, .no-results, .attempt-title"
+    ".film-cards-container, .recommendations-title, .no-results, .attempt-title, .showButton"
   );
 
   const observerOptions = {
@@ -32,3 +32,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// Скрипт для показа всех попыток
+function showAllAttempts() {
+  document.getElementById('all-attempts').style.display = 'block';
+  document.getElementById('show-all-button').style.display = 'none';
+  document.getElementById("collapse-button").style.display = "inline-block"; // Показываем кнопку "Свернуть все"
+}
+
+// Функция для сворачивания всех попыток
+function collapseAttempts() {
+  document.getElementById("all-attempts").style.display = "none";
+  document.getElementById("show-all-button").style.display = "inline-block";
+  document.getElementById("collapse-button").style.display = "none";
+}
