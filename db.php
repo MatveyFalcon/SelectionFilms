@@ -1,3 +1,14 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:57b4513f6a94a15ed1472057d5ff95424aa10fe0d0ae54a483e273fe20851df2
-size 341
+<?php
+$host = 'localhost';
+$db_user = 'root';
+$db_password = '';
+$db_name = 'selectionfilms';
+
+$mysql = new mysqli($host, $db_user, $db_password, $db_name);
+
+if ($mysql->connect_error) {
+    die("Ошибка подключения: " . $mysql->connect_error);
+}
+
+session_start(); // Для работы с сессиями
+?>

@@ -16,6 +16,7 @@ if ($userId) {
     // Получение фильмов соответствующего кластера
     $filmQuery = $mysql->prepare("
             SELECT 
+                `id` AS film_id, 
                 `Название фильма`, 
                 `Аннотация`, 
                 `Вид Фильма`, 
@@ -56,7 +57,7 @@ if ($userId) {
   <title>Подборка фильмов</title>
   <link rel="stylesheet" href="styles/styles.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="js/animation.js"></script>
+  <script src="js/main.js"></script>
 </head>
 
 <body>
@@ -129,12 +130,15 @@ if ($userId) {
           </div>
         <?php endif; ?>
       </div>
+
     </div>
   </section>
   <div class="white-block1"></div>
+
   <section id="recommendations">
     <?php include 'recommendations.php'; ?>
   </section>
+
 </body>
 
 </html>

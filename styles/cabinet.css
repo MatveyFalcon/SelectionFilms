@@ -1,0 +1,200 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #fafafa;
+}
+
+/* Шапка */
+.header {
+  background-color: #5e1136;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.no-collections {
+  text-align: center;
+  color: #666;
+  font-size: 18px;
+  margin-top: 50px;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.logo-link {
+  display: inline-block; /* Устанавливаем блочный контекст */
+  width: fit-content;
+  height: fit-content;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-left: 10px;
+  line-height: 0; /* Убираем лишние промежутки */
+  text-decoration: none; /* Убираем подчеркивание */
+  border: none; /* Убираем возможную рамку */
+  transition: opacity 0.5s ease, transform 0.3s ease;
+}
+
+.logo-link:hover {
+  transform: scale(1.03); /* Опционально, для увеличения размера */
+  opacity: 0.8;
+}
+
+/* Контейнер шапки */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 1158px;
+  max-width: 100%;
+  padding: 0 6px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Логотип */
+.logo {
+  user-select: none;
+  pointer-events: none;
+  animation: slideDown 1s ease-in-out;
+}
+
+/* Кнопка "Назад" */
+.back-button {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 11px 24px;
+  border: 2px solid white;
+  border-radius: 30px;
+  transition: color 0.5s ease, background-color 0.5s ease, box-shadow 0.7s ease,
+    transform 0.3s ease;
+  margin-right: 15px;
+  animation: slideDown 1s ease-in-out;
+}
+
+.back-button:hover {
+  color: #5e1136;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+/* Основное содержимое */
+.content {
+  margin: 25px auto 20px; /* Отступ от фиксированной шапки */
+  max-width: 100%;
+  width: 1158px;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-bottom: 100px;
+}
+
+/* Заголовок рекомендаций */
+.recommendations-title {
+  font-family: "Playfair Display", serif;
+  font-size: 100px;
+  color: #5e1136;
+  text-align: center;
+  margin-bottom: 0px;
+  margin-top: 130px;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.collection-name {
+  font-size: 30px;
+  font-weight: bold;
+  color: #e9738f;
+  margin-bottom: 20px;
+  border-left: 5px solid #e9738f;
+  padding-left: 10px;
+  margin-top: 40px;
+  opacity: 0;
+  animation: slideInLeft 1s ease-in-out 1s forwards;
+}
+
+/* Контейнер для карточек фильмов */
+.film-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  animation: zoomIn 1.2s ease-in-out;
+}
+
+/* Карточка фильма */
+.film-card {
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.film-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Название фильма */
+.film-title {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Информация о фильме */
+.film-duration {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-400px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-70px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

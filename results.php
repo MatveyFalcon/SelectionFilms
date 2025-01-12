@@ -36,7 +36,7 @@ while ($row = $attemptsResult->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Рекомендации</title>
     <link rel="stylesheet" href="styles/results.css">
-    <script src="js/animationRes.js"></script>
+    <script src="js/results.js"></script>
 </head>
 
 <body>
@@ -71,6 +71,8 @@ while ($row = $attemptsResult->fetch_assoc()) {
                             <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($row['Аннотация']) ?></p>
                             <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($row['Вид Фильма']) ?></p>
                             <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($row['Длительность'] ?? 'Не указана') ?></p>
+                            <button class="add-to-collection" onclick="openCollectionModal(<?= $row['film_id'] ?>)">Добавить в подборку</button>
+
                         </div>
                     <?php endwhile; ?>
                 </div>
@@ -111,6 +113,8 @@ while ($row = $attemptsResult->fetch_assoc()) {
                                         <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($row['Аннотация']) ?></p>
                                         <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($row['Вид Фильма']) ?></p>
                                         <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($row['Длительность'] ?? 'Не указана') ?></p>
+                                        <button class="add-to-collection" onclick="openCollectionModal(<?= $row['film_id'] ?>)">Добавить в подборку</button>
+
                                     </div>
                                 <?php endwhile; ?>
                             </div>
@@ -127,7 +131,23 @@ while ($row = $attemptsResult->fetch_assoc()) {
                 <button id="collapse-button" class="showButton" onclick="collapseAttempts()" style="display: none;">Свернуть все</button>
             </div>
         <?php endif; ?>
+        <div id="collectionModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCollectionModal()">&times;</span>
+                <form action="add_to_collection.php" method="POST">
+                    <input type="hidden" name="film_id" id="selectedFilmId">
+                    <label for="collection">Выберите подборку:</label>
+                    <select name="collection_id" id="collection">
+                        <?php require 'get_collections.php'; ?>
+                    </select>
+                    <label for="new_collection">Или создайте новую:</label>
+                    <input type="text" name="new_collection" id="new_collection" placeholder="Название подборки">
+                    <button type="submit">Добавить</button>
+                </form>
+            </div>
+        </div>
     </div>
+
 </body>
 
 </html>

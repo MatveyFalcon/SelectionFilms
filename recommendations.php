@@ -24,90 +24,32 @@
                             <?php else: ?>
                                 <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($film['Продолжительность демонстрации, часы']) ?> ч <?= htmlspecialchars($film['Продолжительность демонстрации, минуты']) ?> мин</p>
                             <?php endif; ?>
+                            <button class="add-to-collection" onclick="openCollectionModal(<?= $film['film_id'] ?>)">Добавить в подборку</button>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
 
+
         <?php if (!empty($films)): ?>
             <button id="load-more" class="show-more-button">Показать еще</button>
         <?php endif; ?>
+
+        <div id="collectionModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCollectionModal()">&times;</span>
+                <form action="add_to_collection.php" method="POST">
+                    <input type="hidden" name="film_id" id="selectedFilmId">
+                    <label for="collection">Выберите подборку:</label>
+                    <select name="collection_id" id="collection">
+                        <?php require 'get_collections.php'; ?>
+                    </select>
+                    <label for="new_collection">Или создайте новую:</label>
+                    <input type="text" name="new_collection" id="new_collection" placeholder="Название подборки">
+                    <button type="submit">Добавить</button>
+                </form>
+            </div>
+        </div>
     </div>
 </section>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const allFilms = [...document.querySelectorAll(".film-card")];
-        const filmContainer = document.querySelector(".film-cards-container");
-        const loadMoreButton = document.getElementById("load-more");
-
-        const maxFilmsToShow = 36; // Максимальное количество фильмов
-        const initialFilmsToShow = 6; // Количество фильмов по умолчанию
-
-        let collapseButton = null; // Кнопка "Свернуть все"
-
-        // Функция показа фильмов
-        function showFilms(count) {
-            allFilms.forEach((film, index) => {
-                film.style.display = index < count ? "block" : "none";
-            });
-        }
-
-        // Изначально показываем только первые фильмы
-        showFilms(initialFilmsToShow);
-
-        // Обработчик для кнопки "Показать еще"
-        if (loadMoreButton) {
-            loadMoreButton.addEventListener("click", () => {
-                showFilms(maxFilmsToShow); // Показываем максимум фильмов
-                loadMoreButton.style.display = "none"; // Скрываем кнопку "Показать еще"
-                addCollapseButton(); // Добавляем кнопку "Свернуть все"
-            });
-        }
-
-        // Функция добавления кнопки "Свернуть все"
-        function addCollapseButton() {
-            if (collapseButton) return; // Проверяем, что кнопка уже существует
-
-            collapseButton = document.createElement("button");
-            collapseButton.textContent = "Свернуть все";
-            collapseButton.className = "collapse-button";
-
-            // Добавляем кнопку "Свернуть все" непосредственно в тело документа
-            document.body.appendChild(collapseButton);
-
-            collapseButton.addEventListener("click", () => {
-                showFilms(initialFilmsToShow); // Возвращаем отображение первых фильмов
-                collapseButton.remove(); // Удаляем кнопку "Свернуть все"
-                collapseButton = null; // Обнуляем ссылку на кнопку
-                loadMoreButton.style.display = "block"; // Показываем кнопку "Показать еще"
-            });
-
-            // Добавляем анимацию для кнопки "Свернуть все"
-            observer.observe(collapseButton);
-        }
-
-        // Настройки инициализации анимации для кнопок
-        const observerOptions = {
-            root: null,
-            rootMargin: "0px",
-            threshold: 0.2,
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = "running";
-                } else {
-                    entry.target.style.animationPlayState = "paused";
-                }
-            });
-        }, observerOptions);
-
-        // Инициализация анимации для кнопки "Показать еще"
-        if (loadMoreButton) {
-            loadMoreButton.style.animationPlayState = "paused";
-            observer.observe(loadMoreButton);
-        }
-    });
-</script>
