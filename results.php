@@ -37,7 +37,14 @@ while ($row = $attemptsResult->fetch_assoc()) {
     <title>Рекомендации</title>
     <link rel="stylesheet" href="styles/results.css">
     <script src="js/results.js"></script>
+    <script src="js/collections.js"></script>
 </head>
+
+<?php
+require 'get_added_films.php'; // Подключаем новый файл
+
+$addedFilms = getAddedFilms($mysql, $userId); // Получаем добавленные фильмы
+?>
 
 <body>
     <div class="header">
@@ -71,7 +78,14 @@ while ($row = $attemptsResult->fetch_assoc()) {
                             <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($row['Аннотация']) ?></p>
                             <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($row['Вид Фильма']) ?></p>
                             <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($row['Длительность'] ?? 'Не указана') ?></p>
-                            <button class="add-to-collection" onclick="openCollectionModal(<?= $row['film_id'] ?>)">Добавить в подборку</button>
+                            <div class="heart-icon">
+                                <img
+                                    src="images/<?= in_array($row['film_id'], $addedFilms) ? 'heartZaliv.svg' : 'heartContr.svg' ?>"
+                                    alt="Добавить в подборку"
+                                    id="heart-<?= $row['film_id'] ?>"
+                                    class="heart-icon-image"
+                                    onclick="toggleHeart(<?= $row['film_id'] ?>)">
+                            </div>
 
                         </div>
                     <?php endwhile; ?>
@@ -113,7 +127,14 @@ while ($row = $attemptsResult->fetch_assoc()) {
                                         <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($row['Аннотация']) ?></p>
                                         <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($row['Вид Фильма']) ?></p>
                                         <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($row['Длительность'] ?? 'Не указана') ?></p>
-                                        <button class="add-to-collection" onclick="openCollectionModal(<?= $row['film_id'] ?>)">Добавить в подборку</button>
+                                        <div class="heart-icon">
+                                            <img
+                                                src="images/<?= in_array($row['film_id'], $addedFilms) ? 'heartZaliv.svg' : 'heartContr.svg' ?>"
+                                                alt="Добавить в подборку"
+                                                id="heart-<?= $row['film_id'] ?>"
+                                                class="heart-icon-image"
+                                                onclick="toggleHeart(<?= $row['film_id'] ?>)">
+                                        </div>
 
                                     </div>
                                 <?php endwhile; ?>
@@ -142,7 +163,23 @@ while ($row = $attemptsResult->fetch_assoc()) {
                     </select>
                     <label for="new_collection">Или создайте новую:</label>
                     <input type="text" name="new_collection" id="new_collection" placeholder="Название подборки">
-                    <button type="submit">Добавить</button>
+                    <button type="button" onclick="addFilmToCollection()">Добавить</button>
+
+                </form>
+            </div>
+        </div>
+
+        <div id="removeModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeRemoveModal()">&times;</span>
+                <form action="remove_from_collection.php" method="POST">
+                    <input type="hidden" name="film_id" id="removeFilmId">
+                    <label for="remove_collection">Выберите подборку:</label>
+                    <select name="collection_id" id="remove_collection">
+                        <!-- Здесь будут загружены подборки -->
+                    </select>
+                    <button type="button" onclick="removeFilmFromCollection()">Удалить</button>
+
                 </form>
             </div>
         </div>

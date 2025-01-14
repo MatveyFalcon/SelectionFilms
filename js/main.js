@@ -44,9 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Функция показа фильмов
   function showFilms(count) {
-      allFilms.forEach((film, index) => {
-          film.style.display = index < count ? "block" : "none";
-      });
+    allFilms.forEach((film, index) => {
+      film.style.display = index < count ? "block" : "none";
+    });
   }
 
   // Изначально показываем только первые фильмы
@@ -54,69 +54,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Обработчик для кнопки "Показать еще"
   if (loadMoreButton) {
-      loadMoreButton.addEventListener("click", () => {
-          showFilms(maxFilmsToShow); // Показываем максимум фильмов
-          loadMoreButton.style.display = "none"; // Скрываем кнопку "Показать еще"
-          addCollapseButton(); // Добавляем кнопку "Свернуть все"
-      });
+    loadMoreButton.addEventListener("click", () => {
+      showFilms(maxFilmsToShow); // Показываем максимум фильмов
+      loadMoreButton.style.display = "none"; // Скрываем кнопку "Показать еще"
+      addCollapseButton(); // Добавляем кнопку "Свернуть все"
+    });
   }
 
   // Функция добавления кнопки "Свернуть все"
   function addCollapseButton() {
-      if (collapseButton) return; // Проверяем, что кнопка уже существует
+    if (collapseButton) return; // Проверяем, что кнопка уже существует
 
-      collapseButton = document.createElement("button");
-      collapseButton.textContent = "Свернуть все";
-      collapseButton.className = "collapse-button";
+    collapseButton = document.createElement("button");
+    collapseButton.textContent = "Свернуть все";
+    collapseButton.className = "collapse-button";
 
-      // Добавляем кнопку "Свернуть все" непосредственно в тело документа
-      document.body.appendChild(collapseButton);
+    // Добавляем кнопку "Свернуть все" непосредственно в тело документа
+    document.body.appendChild(collapseButton);
 
-      collapseButton.addEventListener("click", () => {
-          showFilms(initialFilmsToShow); // Возвращаем отображение первых фильмов
-          collapseButton.remove(); // Удаляем кнопку "Свернуть все"
-          collapseButton = null; // Обнуляем ссылку на кнопку
-          loadMoreButton.style.display = "block"; // Показываем кнопку "Показать еще"
-      });
+    collapseButton.addEventListener("click", () => {
+      showFilms(initialFilmsToShow); // Возвращаем отображение первых фильмов
+      collapseButton.remove(); // Удаляем кнопку "Свернуть все"
+      collapseButton = null; // Обнуляем ссылку на кнопку
+      loadMoreButton.style.display = "block"; // Показываем кнопку "Показать еще"
+    });
 
-      // Добавляем анимацию для кнопки "Свернуть все"
-      observer.observe(collapseButton);
+    // Добавляем анимацию для кнопки "Свернуть все"
+    observer.observe(collapseButton);
   }
 
   // Настройки инициализации анимации для кнопок
   const observerOptions = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.2,
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.2,
   };
 
   const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-              entry.target.style.animationPlayState = "running";
-          } else {
-              entry.target.style.animationPlayState = "paused";
-          }
-      });
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = "running";
+      } else {
+        entry.target.style.animationPlayState = "paused";
+      }
+    });
   }, observerOptions);
 
   // Инициализация анимации для кнопки "Показать еще"
   if (loadMoreButton) {
-      loadMoreButton.style.animationPlayState = "paused";
-      observer.observe(loadMoreButton);
+    loadMoreButton.style.animationPlayState = "paused";
+    observer.observe(loadMoreButton);
   }
 });
-
-function openCollectionModal(filmId) {
-  const modal = document.getElementById('collectionModal');
-  modal.style.display = 'block';
-  document.getElementById('selectedFilmId').value = filmId;
-}
-
-
-function closeCollectionModal() {
-  const modal = document.getElementById('collectionModal');
-  modal.style.display = 'none';
-}
 
 

@@ -25,6 +25,11 @@ $query = $mysql->prepare("INSERT INTO collection_films (collection_id, film_id) 
 $query->bind_param('ii', $collectionId, $filmId);
 $query->execute();
 
-header("Location: index.php");
+if (empty($filmId) || (empty($collectionId) && empty($newCollectionName))) {
+    http_response_code(400); // Неправильный запрос
+    exit('Недостаточно данных');
+}
+
+
+http_response_code(200); // Возвращаем успешный код ответа
 exit();
-?>

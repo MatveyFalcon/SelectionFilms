@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const animatedElements = document.querySelectorAll(
-    ".film-cards-container, .recommendations-title, .no-results, .attempt-title, .showButton, .collection-name"
+    ".film-cards-container, .recommendations-title, .no-results, .attempt-title, .showButton, .collection-name, .no-films"
   );
 
   const observerOptions = {
@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Скрипт для показа всех попыток
 function showAllAttempts() {
-  document.getElementById('all-attempts').style.display = 'block';
-  document.getElementById('show-all-button').style.display = 'none';
+  document.getElementById("all-attempts").style.display = "block";
+  document.getElementById("show-all-button").style.display = "none";
   document.getElementById("collapse-button").style.display = "inline-block"; // Показываем кнопку "Свернуть все"
 }
 
@@ -44,15 +44,4 @@ function collapseAttempts() {
   document.getElementById("all-attempts").style.display = "none";
   document.getElementById("show-all-button").style.display = "inline-block";
   document.getElementById("collapse-button").style.display = "none";
-}
-
-function openCollectionModal(filmId) {
-  const modal = document.getElementById('collectionModal');
-  modal.style.display = 'block';
-  document.getElementById('selectedFilmId').value = filmId;
-}
-
-function closeCollectionModal() {
-  const modal = document.getElementById('collectionModal');
-  modal.style.display = 'none';
 }

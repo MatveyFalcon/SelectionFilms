@@ -66,6 +66,7 @@ while ($row = $result->fetch_assoc()) {
     <title>Личный кабинет</title>
     <link rel="stylesheet" href="styles/cabinet.css">
     <script src="js/results.js"></script>
+    <script src="js/collections.js"></script>
 </head>
 
 <body>
@@ -78,6 +79,12 @@ while ($row = $result->fetch_assoc()) {
         </div>
     </div>
 
+    <?php
+    require 'get_added_films.php'; // Подключаем новый файл
+
+    $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавленные фильмы
+    ?>
+
     <main class="content">
         <h1 class="recommendations-title">МОИ ПОДБОРКИ</h1>
 
@@ -89,13 +96,27 @@ while ($row = $result->fetch_assoc()) {
                         <?php if (!empty($collection['films'])): ?>
                             <div class="film-cards-container">
                                 <?php foreach ($collection['films'] as $film): ?>
-                                    <div class="film-card">
-                                        <img src="images/Заглушка1.svg" alt="Заглушка" style="pointer-events: none;">
-                                        <h2 class="film-title"><?= htmlspecialchars($film['name']) ?></h2>
-                                        <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($film['annotation'] ?? 'Не указан') ?></p>
-                                        <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($film['type'] ?? 'Не указан') ?></p>
-                                        <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($film['duration'] ?? 'Не указана') ?></p>
-                                    </div>
+                                    <?php if (isset($film['id'])): // Проверяем наличие film_id 
+                                    ?>
+                                        <div class="film-card" id="film-card-<?= htmlspecialchars($film['id']) ?>">
+                                            <img src="images/Заглушка1.svg" alt="Заглушка" style="pointer-events: none;">
+                                            <h2 class="film-title"><?= htmlspecialchars($film['name']) ?></h2>
+                                            <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($film['annotation'] ?? 'Не указан') ?></p>
+                                            <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($film['type'] ?? 'Не указан') ?></p>
+                                            <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($film['duration'] ?? 'Не указана') ?></p>
+                                            <div class="heart-icon">
+                                                <img
+                                                    src="images/<?= in_array($film['id'], $addedFilms) ? 'heartZaliv.svg' : 'heartContr.svg' ?>"
+                                                    alt="Удалить из подборки"
+                                                    id="heart-<?= $film['id'] ?>"
+                                                    class="heart-icon-image"
+                                                    onclick="removeFilmFromCollectionCabinet(<?= $film['id'] ?>, <?= $collectionId ?>)">
+                                            </div>
+
+                                        </div>
+                                    <?php else: ?>
+                                        <p class="no-film-warning">Ошибка: Данные о фильме отсутствуют.</p>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>
                         <?php else: ?>
@@ -106,6 +127,7 @@ while ($row = $result->fetch_assoc()) {
             <?php else: ?>
                 <p class="no-collections">У вас пока нет подборок.</p>
             <?php endif; ?>
+
         </section>
 
     </main>

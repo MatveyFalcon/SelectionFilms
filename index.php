@@ -58,6 +58,7 @@ if ($userId) {
   <link rel="stylesheet" href="styles/styles.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/collections.js"></script>
 </head>
 
 <body>

@@ -8,6 +8,12 @@
                 <a href="login.php" class="login-promt-button">Войти</a>
             </div>
         <?php endif; ?>
+        <?php
+        require 'get_added_films.php'; // Подключаем новый файл
+
+        $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавленные фильмы
+        ?>
+
         <div class="film-cards-container">
             <?php if ($userId && !empty($films)): ?>
                 <?php foreach ($films as $film): ?>
@@ -24,13 +30,21 @@
                             <?php else: ?>
                                 <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($film['Продолжительность демонстрации, часы']) ?> ч <?= htmlspecialchars($film['Продолжительность демонстрации, минуты']) ?> мин</p>
                             <?php endif; ?>
-                            <button class="add-to-collection" onclick="openCollectionModal(<?= $film['film_id'] ?>)">Добавить в подборку</button>
+                            <div class="heart-icon">
+                                <img
+                                    src="images/<?= in_array($film['film_id'], $addedFilms) ? 'heartZaliv.svg' : 'heartContr.svg' ?>"
+                                    alt="Добавить в подборку"
+                                    id="heart-<?= $film['film_id'] ?>"
+                                    class="heart-icon-image"
+                                    onclick="toggleHeart(<?= $film['film_id'] ?>)">
+                            </div>
+                            
+                            
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-
 
         <?php if (!empty($films)): ?>
             <button id="load-more" class="show-more-button">Показать еще</button>
@@ -47,9 +61,27 @@
                     </select>
                     <label for="new_collection">Или создайте новую:</label>
                     <input type="text" name="new_collection" id="new_collection" placeholder="Название подборки">
-                    <button type="submit">Добавить</button>
+                    <button type="button" onclick="addFilmToCollection()">Добавить</button>
+
                 </form>
             </div>
         </div>
+
+        <div id="removeModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeRemoveModal()">&times;</span>
+                <form action="remove_from_collection.php" method="POST">
+                    <input type="hidden" name="film_id" id="removeFilmId">
+                    <label for="remove_collection">Выберите подборку:</label>
+                    <select name="collection_id" id="remove_collection">
+                        <!-- Здесь будут загружены подборки -->
+                    </select>
+                    <button type="button" onclick="removeFilmFromCollection()">Удалить</button>
+
+                </form>
+            </div>
+        </div>
+
+
     </div>
 </section>

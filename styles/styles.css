@@ -9,7 +9,7 @@ body {
   font-optical-sizing: auto;
   font-weight: normal;
   font-style: normal;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
 }
 
 .banner {
@@ -44,7 +44,7 @@ body {
 
 .sections {
   position: absolute;
-  left: 45%;
+  left: 42.5%;
   transform: translateX(-50%);
   display: flex;
   gap: 25px;
@@ -159,7 +159,7 @@ body {
 .white-block {
   width: 100%;
   height: 986px;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -228,7 +228,7 @@ body {
   animation: zoomIn 1.2s ease-in-out;
 }
 
-.text-login{
+.text-login {
   color: #808080;
   font-size: 25px;
   text-align: center;
@@ -237,7 +237,7 @@ body {
   animation: fadeInUp 1.5s ease-in-out;
 }
 
-.text-login1{
+.text-login1 {
   color: #808080;
   font-size: 25px;
   text-align: center;
@@ -257,7 +257,8 @@ body {
   font-weight: bold;
   border-radius: 50px;
   animation: fadeIn 1s ease-in-out;
-  transition: background-color 0.3s ease, box-shadow 0.7s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.7s ease,
+    transform 0.3s ease;
 }
 
 .test-button:hover {
@@ -271,7 +272,8 @@ body {
   background-color: #a73b56;
   transform: scale(1); /* Сжатие при нажатии */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.1s ease, box-shadow 0.1s ease, transform 0.1s ease;
+  transition: background-color 0.1s ease, box-shadow 0.1s ease,
+    transform 0.1s ease;
 }
 
 .center {
@@ -417,13 +419,13 @@ body {
   pointer-events: none;
 }*/
 
-
 .film-card {
   background-color: #fff;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
 }
 
 .film-card:hover {
@@ -549,7 +551,7 @@ body {
 .white-block1 {
   width: 100%;
   height: 128px;
-  background-color: #FAFAFA;
+  background-color: #fafafa;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -602,80 +604,169 @@ body {
   transform: scaleX(1);
 }
 
-/* Общий стиль для модального окна */
+/* Общие стили для модальных окон */
 .modal {
-  display: none; /* Изначально скрыто */
-  position: fixed; /* Фиксированное положение */
-  z-index: 1000; /* Высокий приоритет слоя */
+  display: none; /* Скрыто по умолчанию */
+  position: fixed;
+  z-index: 1000; /* Поверх всего */
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto; /* Если контент выходит за пределы окна */
-  background-color: rgba(0, 0, 0, 0.6); /* Затемнённый фон */
+  overflow: auto; /* Если контент слишком большой */
+  background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный черный фон */
+  backdrop-filter: blur(5px); /* Размытие фона */
 }
 
-/* Контейнер контента внутри модального окна */
+/* Контейнер для контента модального окна */
 .modal-content {
-  background-color: #fefefe; /* Белый фон для контента */
+  position: relative;
+  background-color: #ffffff;
   margin: 15% auto; /* Центрирование по вертикали и горизонтали */
   padding: 20px;
-  border: 1px solid #888; /* Лёгкая рамка */
-  border-radius: 8px; /* Скругление углов */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
-  width: 40%; /* Ширина модального окна */
-  max-width: 500px; /* Максимальная ширина */
-  animation: fadeInUp 0.3s; /* Анимация появления */
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeInDown 0.3s ease-out;
 }
 
-/* Кнопка закрытия модального окна */
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
+/* Анимации */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Стили для кнопки закрытия */
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
   font-weight: bold;
-  cursor: pointer; /* Указатель для клика */
-  transition: color 0.3s ease;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
-.close:hover,
-.close:focus {
-  color: #000; /* При наведении меняется цвет */
-  text-decoration: none;
+.modal-content .close:hover {
+  color: #d32f2f;
 }
 
-/* Поля формы */
-form label {
-  display: block;
-  margin-top: 10px;
+/* Стили формы внутри модального окна */
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Стили для текста и меток */
+.modal-content label {
+  font-size: 14px;
   font-weight: bold;
+  color: #333;
+  font-family: "Montserrat", sans-serif;
 }
 
-form input[type="text"],
-form select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  margin-bottom: 15px;
+/* Поля ввода */
+.modal-content input[type="text"],
+.modal-content select {
+  padding: 10px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 16px;
+  transition: border-color 0.3s;
 }
 
-/* Кнопка в форме */
-form button[type="submit"] {
-  background-color: #4CAF50; /* Зеленый цвет */
-  color: white;
-  padding: 10px 20px;
+.modal-content input[type="text"]:focus,
+.modal-content select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Кнопки */
+.modal-content button {
+  background-color: #007bff;
+  color: #ffffff;
   border: none;
+  padding: 10px 15px;
+  font-size: 14px;
   border-radius: 4px;
-  cursor: pointer; /* Указатель для клика */
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-form button[type="submit"]:hover {
-  background-color: #45a049; /* Темнее при наведении */
+.modal-content button:hover {
+  background-color: #0056b3;
 }
 
+.heart-icon {
+  cursor: pointer;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  position: absolute; /* Абсолютное позиционирование */
+  bottom: 20px; /* Отступ от нижнего края */
+  right: 20px; /* Отступ от правого края */
+}
+
+.heart-icon-image {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.2s ease;
+}
+
+.heart-icon:hover .heart-icon-image {
+  transform: scale(1.1);
+}
+
+/* Анимация для активного состояния */
+.heart-icon.active .heart-icon-image {
+  animation: pulse-darken 1s ease-in-out;
+}
+
+/* Ключевые кадры анимации */
+@keyframes pulse-darken {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.1);
+    filter: brightness(0.9);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* Анимация для удаления (плавный переход из залитого в контур) */
+.heart-icon.removing .heart-icon-image {
+  animation: fade-to-outline 1s ease-in-out;
+}
+
+/* Ключевые кадры для перехода */
+@keyframes fade-to-outline {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.9);
+    filter: brightness(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+    opacity: 1;
+  }
+}

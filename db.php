@@ -10,5 +10,7 @@ if ($mysql->connect_error) {
     die("Ошибка подключения: " . $mysql->connect_error);
 }
 
-session_start(); // Для работы с сессиями
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
