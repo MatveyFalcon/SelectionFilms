@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require 'backend/db.php';
 
 // Проверка авторизации
 if (!isset($_SESSION['user'])) {

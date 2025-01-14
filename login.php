@@ -19,7 +19,7 @@
         <div class="container1 auth-container">
             <h1>Вход</h1>
             <?php
-            require 'db.php';
+            require 'backend/db.php';
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $username = $_POST['username'];

@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require 'backend/db.php';
 
 // Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['user'])) {
@@ -80,7 +80,7 @@ while ($row = $result->fetch_assoc()) {
     </div>
 
     <?php
-    require 'get_added_films.php'; // Подключаем новый файл
+    require 'backend/get_added_films.php'; // Подключаем новый файл
 
     $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавленные фильмы
     ?>

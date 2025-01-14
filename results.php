@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require 'backend/db.php';
 
 // Проверяем авторизацию
 if (!isset($_SESSION['user'])) {
@@ -41,7 +41,7 @@ while ($row = $attemptsResult->fetch_assoc()) {
 </head>
 
 <?php
-require 'get_added_films.php'; // Подключаем новый файл
+require 'backend/get_added_films.php'; // Подключаем новый файл
 
 $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавленные фильмы
 ?>
@@ -155,7 +155,7 @@ $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавле
         <div id="collectionModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeCollectionModal()">&times;</span>
-                <form action="add_to_collection.php" method="POST">
+                <form action="backend/add_to_collection.php" method="POST">
                     <input type="hidden" name="film_id" id="selectedFilmId">
                     <label for="collection">Выберите подборку:</label>
                     <select name="collection_id" id="collection">
@@ -173,7 +173,7 @@ $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавле
         <div id="removeModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeRemoveModal()">&times;</span>
-                <form action="remove_from_collection.php" method="POST">
+                <form action="backend/remove_from_collection.php" method="POST">
                     <input type="hidden" name="film_id" id="removeFilmId">
                     <label for="remove_collection">Выберите подборку:</label>
                     <select name="collection_id" id="remove_collection">

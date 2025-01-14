@@ -12,7 +12,7 @@ function loadCollections() {
   const select = document.getElementById("collection");
 
   // Отправляем запрос на сервер для получения подборок
-  fetch("get_collections.php")
+  fetch("backend/get_collections.php")
     .then((response) => response.json()) // Ожидаем JSON-ответ
     .then((data) => {
       // Очищаем текущие опции
@@ -43,8 +43,8 @@ function closeCollectionModal() {
 }
 
 function toggleHeart(filmId) {
-  const heartIcon = document.getElementById(`heart-${filmId}`);
-  const isAdded = heartIcon.src.includes("heartZaliv.svg");
+  const heartIcons = document.querySelectorAll(`[id^="heart-${filmId}"]`);
+  const isAdded = heartIcons[0]?.src.includes("heartZaliv.svg");
 
   if (isAdded) {
     // Если фильм уже добавлен, открыть модальное окно для удаления
@@ -67,7 +67,7 @@ function openRemoveModal(filmId) {
   select.innerHTML = "<option>Загрузка...</option>";
 
   // Отправить запрос на сервер для получения подборок
-  fetch("get_film_collections.php", {
+  fetch("backend/get_film_collections.php", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: `film_id=${filmId}`,
@@ -95,14 +95,12 @@ function addFilmToCollection() {
   const collectionId = document.getElementById("collection").value;
   const newCollectionName = document.getElementById("new_collection").value;
 
-  // Проверяем, что выбрана либо существующая подборка, либо введено название новой подборки
   if (!collectionId && !newCollectionName) {
     alert("Пожалуйста, выберите подборку или введите название новой подборки.");
-    return; // Прерываем выполнение, если ничего не выбрано или не введено
+    return;
   }
 
-  // Отправляем запрос на сервер
-  fetch("add_to_collection.php", {
+  fetch("backend/add_to_collection.php", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: `film_id=${filmId}&collection_id=${collectionId}&new_collection=${encodeURIComponent(
@@ -111,18 +109,16 @@ function addFilmToCollection() {
   })
     .then((response) => {
       if (response.ok) {
-        // Закрыть модальное окно
         closeCollectionModal();
-        // Обновить сердечко на странице
-        const heartIcon = document.getElementById(`heart-${filmId}`);
-        heartIcon.src = "images/heartZaliv.svg"; // Установить "заполненное" сердечко
 
-        // Добавить класс для анимации
-        const heartContainer = heartIcon.parentElement;
-        heartContainer.classList.add("active");
-
-        // Удалить класс после завершения анимации, чтобы можно было повторно активировать
-        setTimeout(() => heartContainer.classList.remove("active"), 1000); // Время соответствует длительности анимации
+        // Обновить все сердечки с данным filmId
+        const heartIcons = document.querySelectorAll(`[id^="heart-${filmId}"]`);
+        heartIcons.forEach((heartIcon) => {
+          heartIcon.src = "images/heartZaliv.svg";
+          const heartContainer = heartIcon.parentElement;
+          heartContainer.classList.add("active");
+          setTimeout(() => heartContainer.classList.remove("active"), 1000);
+        });
       } else {
         console.error("Ошибка при добавлении фильма в подборку");
       }
@@ -134,26 +130,23 @@ function removeFilmFromCollection() {
   const filmId = document.getElementById("removeFilmId").value;
   const collectionId = document.getElementById("remove_collection").value;
 
-  // Отправляем запрос на сервер
-  fetch("remove_from_collection.php", {
+  fetch("backend/remove_from_collection.php", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: `film_id=${filmId}&collection_id=${collectionId}`,
   })
     .then((response) => {
       if (response.ok) {
-        // Закрыть модальное окно
         closeRemoveModal();
-        // Обновить сердечко на странице
-        const heartIcon = document.getElementById(`heart-${filmId}`);
-        heartIcon.src = "images/heartContr.svg"; // Установить "пустое" сердечко
 
-        // Добавить класс для анимации
-        const heartContainer = heartIcon.parentElement;
-        heartContainer.classList.add("removing");
-
-        // Удалить класс после завершения анимации, чтобы можно было повторно активировать
-        setTimeout(() => heartContainer.classList.remove("removing"), 1000); // Время соответствует длительности анимации
+        // Обновить все сердечки с данным filmId
+        const heartIcons = document.querySelectorAll(`[id^="heart-${filmId}"]`);
+        heartIcons.forEach((heartIcon) => {
+          heartIcon.src = "images/heartContr.svg";
+          const heartContainer = heartIcon.parentElement;
+          heartContainer.classList.add("removing");
+          setTimeout(() => heartContainer.classList.remove("removing"), 1000);
+        });
       } else {
         console.error("Ошибка при удалении фильма из подборки");
       }
@@ -163,7 +156,7 @@ function removeFilmFromCollection() {
 
 function removeFilmFromCollectionCabinet(filmId, collectionId) {
   // Отправляем запрос на сервер
-  fetch("remove_from_collection.php", {
+  fetch("backend/remove_from_collection.php", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: `film_id=${filmId}&collection_id=${collectionId}`,
@@ -219,7 +212,7 @@ function deleteCollection(collectionId) {
     return;
   }
 
-  fetch("delete_collection.php", {
+  fetch("backend/delete_collection.php", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: `collection_id=${collectionId}`,

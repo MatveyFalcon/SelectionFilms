@@ -107,4 +107,41 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+/*document.getElementById("spin-button").addEventListener("click", function () {
+  const wheel = document.getElementById("genre-wheel");
+  const segments = wheel.querySelectorAll(".wheel-segment span");
+  const totalSegments = segments.length;
 
+  // Random selection
+  const randomIndex = Math.floor(Math.random() * totalSegments);
+  const selectedSegment = segments[randomIndex];
+  const clusterId = selectedSegment.dataset.cluster;
+
+  // Spin animation
+  const rotation = randomIndex * (360 / totalSegments) + 360 * 3; // 3 full spins
+  wheel.style.transition = "transform 3s ease-out";
+  wheel.style.transform = `rotate(-${rotation}deg)`;
+
+  // Load movies after animation ends
+  setTimeout(() => {
+    fetch(`fetch_movies.php?cluster=${clusterId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const cardsContainer = document.getElementById("film-cards");
+        cardsContainer.innerHTML = "";
+        data.forEach((film) => {
+          cardsContainer.innerHTML += `
+            <div class="film-card">
+              <img src="images/Заглушка.svg" alt="Заглушка" />
+              <div class="film-details">
+                <h3>${film["Название фильма"]}</h3>
+                <p><strong>Жанр:</strong> ${film["Аннотация"]}</p>
+                <p><strong>Вид:</strong> ${film["Вид Фильма"]}</p>
+                <p><strong>Длительность:</strong> ${film["Продолжительность демонстрации, часы"]} ч ${film["Продолжительность демонстрации, минуты"]} мин</p>
+              </div>
+            </div>
+          `;
+        });
+      });
+  }, 3000);
+});*/
