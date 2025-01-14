@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const animatedElements = document.querySelectorAll(
-    ".film-cards-container, .recommendations-title, .no-results, .attempt-title, .showButton, .collection-name, .no-films"
+    ".film-cards-container, .recommendations-title, .no-results, .attempt-title, .showButton, .collection-name, .no-films, .delete-collection"
   );
 
   const observerOptions = {

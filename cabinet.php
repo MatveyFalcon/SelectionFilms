@@ -90,9 +90,12 @@ while ($row = $result->fetch_assoc()) {
 
         <section class="collections">
             <?php if (!empty($collections)): ?>
-                <?php foreach ($collections as $collection): ?>
-                    <div class="collection">
-                        <h3 class="collection-name"><?= htmlspecialchars($collection['name']) ?></h3>
+                <?php foreach ($collections as $collectionId => $collection): ?>
+                    <div class="collection" id="collection-<?= htmlspecialchars($collectionId) ?>">
+                        <div class="collection-header">
+                            <h3 class="collection-name"><?= htmlspecialchars($collection['name']) ?></h3>
+                            <span class="delete-collection" onclick="deleteCollection(<?= $collectionId ?>)">×</span>
+                        </div>
                         <?php if (!empty($collection['films'])): ?>
                             <div class="film-cards-container">
                                 <?php foreach ($collection['films'] as $film): ?>

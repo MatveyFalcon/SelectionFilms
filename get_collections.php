@@ -1,26 +1,27 @@
 <?php
-// Получаем подборки пользователя из базы данных
-require 'db.php'; // подключаем файл с подключением к БД
+require 'db.php';
 
-// Проверяем, авторизован ли пользователь
+header('Content-Type: application/json');
+
 if (isset($_SESSION['user'])) {
     $userId = $_SESSION['user'];
 
-    // Запрос для получения подборок
     $collectionsQuery = $mysql->prepare("SELECT id, name FROM collections WHERE user_id = ?");
     $collectionsQuery->bind_param('i', $userId);
     $collectionsQuery->execute();
     $collectionsResult = $collectionsQuery->get_result();
 
-    // Проверка наличия подборок
-    if ($collectionsResult->num_rows > 0) {
-        while ($row = $collectionsResult->fetch_assoc()) {
-            echo '<option value="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>';
-        }
-    } else {
-        echo '<option disabled>У вас нет подборок</option>';
+    $collections = [];
+    while ($row = $collectionsResult->fetch_assoc()) {
+        $collections[] = [
+            'id' => $row['id'],
+            'name' => $row['name']
+        ];
     }
 
-    // Закрытие соединения с БД
     $collectionsQuery->close();
+
+    echo json_encode(['collections' => $collections]);
+} else {
+    echo json_encode(['error' => 'User not authenticated']);
 }

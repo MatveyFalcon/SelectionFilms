@@ -159,12 +159,13 @@ $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавле
                     <input type="hidden" name="film_id" id="selectedFilmId">
                     <label for="collection">Выберите подборку:</label>
                     <select name="collection_id" id="collection">
-                        <?php require 'get_collections.php'; ?>
+                        <option value="" selected disabled>Загрузка подборок...</option>
                     </select>
                     <label for="new_collection">Или создайте новую:</label>
                     <input type="text" name="new_collection" id="new_collection" placeholder="Название подборки">
-                    <button type="button" onclick="addFilmToCollection()">Добавить</button>
-
+                    <div class="button-add">
+                        <button type="button" onclick="addFilmToCollection()">Добавить</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -178,8 +179,9 @@ $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавле
                     <select name="collection_id" id="remove_collection">
                         <!-- Здесь будут загружены подборки -->
                     </select>
-                    <button type="button" onclick="removeFilmFromCollection()">Удалить</button>
-
+                    <div class="button-add">
+                        <button type="button" onclick="removeFilmFromCollection()">Удалить</button>
+                    </div>
                 </form>
             </div>
         </div>

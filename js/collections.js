@@ -2,6 +2,39 @@ function openCollectionModal(filmId) {
   const modal = document.getElementById("collectionModal");
   modal.style.display = "block";
   document.getElementById("selectedFilmId").value = filmId;
+
+  document.getElementById("new_collection").value = "";
+
+  loadCollections();
+}
+
+function loadCollections() {
+  const select = document.getElementById("collection");
+
+  // Отправляем запрос на сервер для получения подборок
+  fetch("get_collections.php")
+    .then((response) => response.json()) // Ожидаем JSON-ответ
+    .then((data) => {
+      // Очищаем текущие опции
+      select.innerHTML =
+        '<option value="" selected disabled>Выберите вариант</option>';
+
+      if (data.collections && data.collections.length > 0) {
+        // Заполняем список подборок
+        data.collections.forEach((collection) => {
+          const option = document.createElement("option");
+          option.value = collection.id;
+          option.textContent = collection.name;
+          select.appendChild(option);
+        });
+      } else {
+        select.innerHTML = "<option disabled>У вас нет подборок</option>";
+      }
+    })
+    .catch((error) => {
+      console.error("Ошибка загрузки подборок:", error);
+      select.innerHTML = "<option disabled>Ошибка загрузки</option>";
+    });
 }
 
 function closeCollectionModal() {
@@ -128,49 +161,6 @@ function removeFilmFromCollection() {
     .catch((error) => console.error("Ошибка при удалении:", error));
 }
 
-/*function removeFilmFromCollectionCabinet(filmId, collectionId) {
-  // Отправляем запрос на сервер
-  fetch("remove_from_collection.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `film_id=${filmId}&collection_id=${collectionId}`,
-  })
-    .then((response) => {
-      if (response.ok) {
-        // Найти и удалить карточку фильма из DOM
-        const filmCard = document.getElementById(`film-card-${filmId}`);
-        if (filmCard) {
-          const filmContainer = filmCard.parentElement; // Контейнер с фильмами
-          filmCard.remove();
-
-          // Проверяем, остались ли фильмы в контейнере
-          if (filmContainer && filmContainer.children.length === 0) {
-            const collectionElement = filmContainer.parentElement; // Контейнер подборки
-            const noFilmsMessage = document.createElement("p");
-            noFilmsMessage.className = "no-films";
-            noFilmsMessage.textContent = "Подборка пуста";
-            noFilmsMessage.style.marginTop = "0px";
-
-            // Добавляем сообщение в коллекцию
-            collectionElement.appendChild(noFilmsMessage);
-          }
-
-          // Добавить класс для анимации
-          const heartContainer = heartIcon.parentElement;
-          heartContainer.classList.add("removing");
-
-          // Удалить класс после завершения анимации, чтобы можно было повторно активировать
-          setTimeout(() => heartContainer.classList.remove("removing"), 1000); // Время соответствует длительности анимации
-        } else {
-          console.warn(`Карточка фильма с ID ${filmId} не найдена.`);
-        }
-      } else {
-        console.error("Ошибка при удалении фильма из подборки");
-      }
-    })
-    .catch((error) => console.error("Ошибка при удалении:", error));
-}*/
-
 function removeFilmFromCollectionCabinet(filmId, collectionId) {
   // Отправляем запрос на сервер
   fetch("remove_from_collection.php", {
@@ -220,4 +210,47 @@ function removeFilmFromCollectionCabinet(filmId, collectionId) {
       }
     })
     .catch((error) => console.error("Ошибка при удалении:", error));
+}
+
+function deleteCollection(collectionId) {
+  if (
+    !confirm("Вы уверены, что хотите удалить эту подборку вместе с фильмами?")
+  ) {
+    return;
+  }
+
+  fetch("delete_collection.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `collection_id=${collectionId}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        // Удаляем элемент из DOM
+        const collectionElement = document.getElementById(
+          `collection-${collectionId}`
+        );
+        if (collectionElement) {
+          collectionElement.remove();
+        }
+
+        // Проверяем количество оставшихся коллекций
+        const collections = document.querySelectorAll(".collection");
+        const contentElement = document.querySelector(".content"); // Находим контейнер .content внутри main
+        if (collections.length === 0) {
+          // Если коллекций нет, создаем сообщение
+          const noCollectionsMessage = document.createElement("p");
+          noCollectionsMessage.className = "no-collections";
+          noCollectionsMessage.textContent = "У вас пока нет подборок.";
+
+          // Добавляем сообщение в .content
+          if (contentElement) {
+            contentElement.appendChild(noCollectionsMessage);
+          }
+        }
+      } else {
+        console.error("Ошибка при удалении подборки");
+      }
+    })
+    .catch((error) => console.error("Ошибка при удалении подборки:", error));
 }
