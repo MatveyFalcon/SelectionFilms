@@ -19,3 +19,4 @@ function getAddedFilms($mysql, $userId) {
     return $addedFilms;
 }
 ?>
+

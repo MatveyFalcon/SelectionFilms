@@ -1,7 +1,3 @@
-<?php
-require 'backend/functions.php';
-?>
-
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -22,7 +18,7 @@ require 'backend/functions.php';
       <div class="sections">
         <a href="#testing" class="section-link">Тестирование</a>
         <a href="#recommendations" class="section-link">Рекомендации</a>
-        <a href="#genre-wheel" class="section-link">“Колесо” жанров</a>
+        <a href="#genre-wheel-section" class="section-link">“Колесо” жанров</a>
       </div>
       <img src="images/Заголовок.svg" alt="Подборка фильмов" class="text" />
       <a href="#testing" class="arrow_a">
@@ -30,14 +26,8 @@ require 'backend/functions.php';
           <img src="images/arrow-down.svg" alt="Вниз" class="arrow-icon" />
         </div>
       </a>
-      <div class="auth-buttons">
-        <?php if (isset($_SESSION['user'])): ?>
-          <a href="backend/logout.php" class="login-button">Выйти</a>
-          <a href="cabinet.php" class="register-button">Личный кабинет</a>
-        <?php else: ?>
-          <a href="login.php" class="login-button">Войти</a>
-          <a href="register.php" class="register-button">Регистрация</a>
-        <?php endif; ?>
+      <div class="auth-buttons" id="auth-buttons">
+        <!-- Кнопки будут загружены динамически -->
       </div>
     </div>
   </div>
@@ -58,38 +48,20 @@ require 'backend/functions.php';
           </p>
         </div>
         <img src="images/Group 6.png" alt="Фильмы" class="groupFilms" />
-        <?php if (!$userId): ?>
-          <!-- Пользователь не авторизован -->
-          <p class="text-login">Войдите, чтобы пройти тестирование!</p>
-          <div class="center">
-            <a href="login.php" class="login-promt-button">Войти</a>
-          </div>
-        <?php elseif ($testScore > 0): ?>
-          <!-- Пользователь прошел тест хотя бы раз -->
-          <div>
-            <div class="center1">
-              <a href="testing.php" class="test-button">Пройти тестирование</a>
-            </div>
-            <p class="text-login1">Вы прошли тестирование <?= $testScore ?> раз(а).</p>
-            <div class="center1">
-              <div class="check-rst">
-                <a href="results.php" class="check-button">Посмотреть результаты!</a>
-              </div>
-            </div>
-          </div>
-        <?php else: ?>
-          <!-- Пользователь авторизован, но не прошел тест -->
-          <div class="center1">
-            <a href="testing.php" class="test-button">Пройти тестирование</a>
-          </div>
-        <?php endif; ?>
+        <div id="testing-content">
+          <!-- Контент будет загружен динамически -->
+        </div>
       </div>
-
     </div>
   </section>
+
   <div class="white-block1"></div>
 
   <section id="recommendations">
+    <?php
+    require 'backend/functions.php';
+    ?>
+
     <div class="container">
       <h2 class="recommendations-title">РЕКОМЕНДАЦИИ</h2>
       <?php if (!$userId || empty($films)): ?>
@@ -178,7 +150,70 @@ require 'backend/functions.php';
 
     </div>
   </section>
-  
+
+  <section id="genre-wheel-section">
+  <div class="container">
+    <h2 class="wheel-title">КОЛЕСО ЖАНРОВ</h2>
+    <div id="genre-wheel-container">
+      <div id="genre-wheel">
+        <!-- Секции с текстами жанров -->
+        <div id="genre-0" style="transform: rotate(0deg);">
+          <span>Документальный</span>
+        </div>
+        <div id="genre-1" style="transform: rotate(25.71deg);">
+          <span>Анимационные, до 18 лет</span>
+        </div>
+        <div id="genre-2" style="transform: rotate(51.42deg);">
+          <span>Анимационные, 18+</span>
+        </div>
+        <div id="genre-3" style="transform: rotate(77.13deg);">
+          <span>Ужасы/Триллеры, 18+</span>
+        </div>
+        <div id="genre-4" style="transform: rotate(102.84deg);">
+          <span>Ужасы/Триллеры, до 18 лет</span>
+        </div>
+        <div id="genre-5" style="transform: rotate(128.55deg);">
+          <span>Комедии, 18+</span>
+        </div>
+        <div id="genre-6" style="transform: rotate(154.26deg);">
+          <span>Комедии, до 18 лет</span>
+        </div>
+        <div id="genre-7" style="transform: rotate(179.97deg);">
+          <span>Мелодрамы/Драмы, 18+</span>
+        </div>
+        <div id="genre-8" style="transform: rotate(205.68deg);">
+          <span>Мелодрамы/Драмы, до 18 лет</span>
+        </div>
+        <div id="genre-9" style="transform: rotate(231.39deg);">
+          <span>Сериалы</span>
+        </div>
+        <div id="genre-10" style="transform: rotate(257.1deg);">
+          <span>Научно-популярные</span>
+        </div>
+        <div id="genre-11" style="transform: rotate(282.81deg);">
+          <span>Боевики, 18+</span>
+        </div>
+        <div id="genre-12" style="transform: rotate(308.52deg);">
+          <span>Боевики, до 18 лет</span>
+        </div>
+        <div id="genre-13" style="transform: rotate(334.23deg);">
+          <span>Прочее</span>
+        </div>
+      </div>
+      <div id="wheel-pointer"></div>
+      <button id="spin-button">Крутить</button>
+    </div>
+    <div class="filmsWheel">
+      <div id="film-cards-container" class="film-cards-container"></div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
   <script src="js/main.js"></script>
 </body>
 

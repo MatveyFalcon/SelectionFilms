@@ -1,6 +1,7 @@
 <?php
 require 'backend/db.php';
 
+
 // Проверяем авторизацию
 if (!isset($_SESSION['user'])) {
     header("Location: login.php");
@@ -16,16 +17,43 @@ $lastAttemptQuery->execute();
 $lastAttemptResult = $lastAttemptQuery->get_result();
 $lastAttempt = $lastAttemptResult->fetch_assoc()['last_attempt'] ?? null;
 
+// Если есть попытка
+if ($lastAttempt) {
+    // Проверяем, есть ли результаты в сессии для этой попытки
+    if (!isset($_SESSION['film_results'][$lastAttempt])) {
+        // Вызов процедуры для последней попытки
+        $filmQuery = $mysql->prepare("CALL GetFilmRecommendations(?, ?)");
+        $filmQuery->bind_param('ii', $userId, $lastAttempt);
+        $filmQuery->execute();
+        $filmResult = $filmQuery->get_result();
+
+        // Сохраняем результаты в сессию
+        $_SESSION['film_results'][$lastAttempt] = [];
+        while ($row = $filmResult->fetch_assoc()) {
+            $_SESSION['film_results'][$lastAttempt][] = $row;
+        }
+
+        $filmQuery->close(); // Закрытие курсора
+    }
+
+    // Получаем данные из сессии
+    $savedFilms = $_SESSION['film_results'][$lastAttempt];
+}
+
 // Получение всех попыток пользователя
-$attemptsQuery = $mysql->prepare("SELECT DISTINCT attempt_number FROM testresult WHERE id = ? ORDER BY attempt_number ASC");
+$attemptsQuery = $mysql->prepare("SELECT DISTINCT attempt_number FROM testresult WHERE id = ? ORDER BY attempt_number DESC");
 $attemptsQuery->bind_param('i', $userId);
 $attemptsQuery->execute();
 $attemptsResult = $attemptsQuery->get_result();
-
 $attempts = [];
+
 while ($row = $attemptsResult->fetch_assoc()) {
     $attempts[] = $row['attempt_number'];
 }
+
+$attemptsQuery->close(); // Закрываем запрос
+
+
 ?>
 
 <!DOCTYPE html>
@@ -59,45 +87,29 @@ $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавле
     <div class="content">
         <h1 class="recommendations-title">РЕЗУЛЬТАТЫ</h1>
 
-        <?php if ($lastAttempt): ?>
+        <?php if (!empty($savedFilms)): ?>
             <h2 class="attempt-title">Текущий результат (Попытка <?= htmlspecialchars($lastAttempt) ?>)</h2>
-            <?php
-            // Вызов процедуры для последней попытки
-            $filmQuery = $mysql->prepare("CALL GetFilmRecommendations(?, ?)");
-            $filmQuery->bind_param('ii', $userId, $lastAttempt);
-            $filmQuery->execute();
-            $filmResult = $filmQuery->get_result();
-            ?>
-
-            <?php if ($filmResult && $filmResult->num_rows > 0): ?>
-                <div class="film-cards-container">
-                    <?php while ($row = $filmResult->fetch_assoc()): ?>
-                        <div class="film-card">
-                            <img src="images/Заглушка1.svg" alt="Заглушка" style="pointer-events: none;">
-                            <h2 class="film-title"><?= htmlspecialchars($row['Название фильма']) ?></h2>
-                            <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($row['Аннотация']) ?></p>
-                            <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($row['Вид Фильма']) ?></p>
-                            <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($row['Длительность'] ?? 'Не указана') ?></p>
-                            <div class="heart-icon">
-                                <img
-                                    src="images/<?= in_array($row['film_id'], $addedFilms) ? 'heartZaliv.svg' : 'heartContr.svg' ?>"
-                                    alt="Добавить в подборку"
-                                    id="heart-<?= $row['film_id'] ?>"
-                                    class="heart-icon-image"
-                                    onclick="toggleHeart(<?= $row['film_id'] ?>)">
-                            </div>
-
+            <div class="film-cards-container">
+                <?php foreach ($savedFilms as $film): ?>
+                    <div class="film-card">
+                        <img src="images/Заглушка1.svg" alt="Заглушка" style="pointer-events: none;">
+                        <h2 class="film-title"><?= htmlspecialchars($film['Название фильма']) ?></h2>
+                        <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($film['Аннотация']) ?></p>
+                        <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($film['Вид Фильма']) ?></p>
+                        <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($film['Длительность'] ?? 'Не указана') ?></p>
+                        <div class="heart-icon">
+                            <img
+                                src="images/<?= in_array($film['film_id'], $addedFilms) ? 'heartZaliv.svg' : 'heartContr.svg' ?>"
+                                alt="Добавить в подборку"
+                                id="heart-<?= $film['film_id'] ?>"
+                                class="heart-icon-image"
+                                onclick="toggleHeart(<?= $film['film_id'] ?>)">
                         </div>
-                    <?php endwhile; ?>
-                </div>
-            <?php else: ?>
-                <p class="no-results">Результаты для текущей попытки не найдены.</p>
-            <?php endif; ?>
-
-            <?php $filmQuery->close(); // Закрытие курсора 
-            ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         <?php else: ?>
-            <p class="no-results">У вас пока нет результатов.</p>
+            <p class="no-results">Результаты для текущей попытки не найдены.</p>
         <?php endif; ?>
 
         <?php if (count($attempts) > 1): ?>
@@ -109,42 +121,52 @@ $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавле
                 <?php foreach ($attempts as $attempt): ?>
                     <?php if ($attempt != $lastAttempt): ?>
                         <?php
-                        // Вызов процедуры для остальных попыток
-                        $filmQuery = $mysql->prepare("CALL GetFilmRecommendations(?, ?)");
-                        $filmQuery->bind_param('ii', $userId, $attempt);
-                        $filmQuery->execute();
-                        $filmResult = $filmQuery->get_result();
+                        // Проверяем, есть ли результаты в сессии для этой попытки
+                        if (!isset($_SESSION['film_results'][$attempt])) {
+                            // Вызов процедуры для текущей попытки
+                            $filmQuery = $mysql->prepare("CALL GetFilmRecommendations(?, ?)");
+                            $filmQuery->bind_param('ii', $userId, $attempt);
+                            $filmQuery->execute();
+                            $filmResult = $filmQuery->get_result();
+
+                            // Сохраняем результаты в сессию
+                            $_SESSION['film_results'][$attempt] = [];
+                            while ($row = $filmResult->fetch_assoc()) {
+                                $_SESSION['film_results'][$attempt][] = $row;
+                            }
+
+                            $filmQuery->close(); // Закрытие курсора
+                        }
+
+                        // Получаем данные из сессии
+                        $savedFilms = $_SESSION['film_results'][$attempt];
                         ?>
 
                         <h2 class="attempt-title">Попытка <?= htmlspecialchars($attempt) ?></h2>
 
-                        <?php if ($filmResult && $filmResult->num_rows > 0): ?>
+                        <?php if (!empty($savedFilms)): ?>
                             <div class="film-cards-container">
-                                <?php while ($row = $filmResult->fetch_assoc()): ?>
+                                <?php foreach ($savedFilms as $film): ?>
                                     <div class="film-card">
                                         <img src="images/Заглушка1.svg" alt="Заглушка" style="pointer-events: none;">
-                                        <h2 class="film-title"><?= htmlspecialchars($row['Название фильма']) ?></h2>
-                                        <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($row['Аннотация']) ?></p>
-                                        <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($row['Вид Фильма']) ?></p>
-                                        <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($row['Длительность'] ?? 'Не указана') ?></p>
+                                        <h2 class="film-title"><?= htmlspecialchars($film['Название фильма']) ?></h2>
+                                        <p class="film-duration"><strong>Жанр:</strong> <?= htmlspecialchars($film['Аннотация']) ?></p>
+                                        <p class="film-duration"><strong>Вид:</strong> <?= htmlspecialchars($film['Вид Фильма']) ?></p>
+                                        <p class="film-duration"><strong>Длительность:</strong> <?= htmlspecialchars($film['Длительность'] ?? 'Не указана') ?></p>
                                         <div class="heart-icon">
                                             <img
-                                                src="images/<?= in_array($row['film_id'], $addedFilms) ? 'heartZaliv.svg' : 'heartContr.svg' ?>"
+                                                src="images/<?= in_array($film['film_id'], $addedFilms) ? 'heartZaliv.svg' : 'heartContr.svg' ?>"
                                                 alt="Добавить в подборку"
-                                                id="heart-<?= $row['film_id'] ?>"
+                                                id="heart-<?= $film['film_id'] ?>"
                                                 class="heart-icon-image"
-                                                onclick="toggleHeart(<?= $row['film_id'] ?>)">
+                                                onclick="toggleHeart(<?= $film['film_id'] ?>)">
                                         </div>
-
                                     </div>
-                                <?php endwhile; ?>
+                                <?php endforeach; ?>
                             </div>
                         <?php else: ?>
                             <p class="no-results">Результаты для попытки <?= htmlspecialchars($attempt) ?> не найдены.</p>
                         <?php endif; ?>
-
-                        <?php $filmQuery->close(); // Закрытие курсора 
-                        ?>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
@@ -152,6 +174,7 @@ $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавле
                 <button id="collapse-button" class="showButton" onclick="collapseAttempts()" style="display: none;">Свернуть все</button>
             </div>
         <?php endif; ?>
+
         <div id="collectionModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeCollectionModal()">&times;</span>
