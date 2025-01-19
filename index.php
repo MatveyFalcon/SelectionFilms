@@ -4,13 +4,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Подборка фильмов</title>
+  <title>FilmSok - подборка фильмов или сериалов на любой вкус!</title>
   <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="icon" href="images/icon-my.svg" type="image/svg+xml">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="js/collections.js"></script>
 </head>
 
 <body>
+  <div id="scroll-to-top" alt="Scroll to top" style="display: none;"></div>
+
   <div class="banner">
     <img src="images/Фон.jpg" alt="Фон" class="background" />
     <div class="container">
@@ -19,6 +22,7 @@
         <a href="#testing" class="section-link">Тестирование</a>
         <a href="#recommendations" class="section-link">Рекомендации</a>
         <a href="#genre-wheel-section" class="section-link">“Колесо” жанров</a>
+        <a href="#footer" class="section-link">Контакты</a>
       </div>
       <img src="images/Заголовок.svg" alt="Подборка фильмов" class="text" />
       <a href="#testing" class="arrow_a">
@@ -55,8 +59,6 @@
     </div>
   </section>
 
-  <div class="white-block1"></div>
-
   <section id="recommendations">
     <?php
     require 'backend/functions.php';
@@ -72,17 +74,16 @@
         </div>
       <?php endif; ?>
       <?php
-      require 'backend/get_added_films.php'; // Подключаем новый файл
+      require 'backend/get_added_films.php';
 
-      $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавленные фильмы
+      $addedFilms = getAddedFilms($mysql, $userId);
       ?>
 
       <div class="film-cards-container">
         <?php if ($userId && !empty($films)): ?>
           <?php foreach ($films as $film): ?>
-            <div class="film-card" style="display: none;">
-              <!-- Заглушка изображения -->
-              <img src="images/Заглушка.svg" alt="Заглушка" style="pointer-events: none;">
+            <div class="film-card" style="display:none">
+              <img src="images/Заглушка.svg" alt="Заглушка" style="pointer-events:none">
 
               <div class="film-details">
                 <h3 class="film-title"><?= htmlspecialchars($film['Название фильма']) ?></h3>
@@ -101,8 +102,6 @@
                     class="heart-icon-image"
                     onclick="toggleHeart(<?= $film['film_id'] ?>)">
                 </div>
-
-
               </div>
             </div>
           <?php endforeach; ?>
@@ -147,73 +146,103 @@
         </div>
       </div>
 
-
     </div>
   </section>
 
   <section id="genre-wheel-section">
-  <div class="container">
-    <h2 class="wheel-title">КОЛЕСО ЖАНРОВ</h2>
-    <div id="genre-wheel-container">
-      <div id="genre-wheel">
-        <!-- Секции с текстами жанров -->
-        <div id="genre-0" style="transform: rotate(0deg);">
-          <span>Документальный</span>
+    <script>
+      const addedFilms = <?= json_encode($addedFilms) ?>;
+    </script>
+    <div class="container">
+      <h2 class="wheel-title">КОЛЕСО ЖАНРОВ</h2>
+      <div id="genre-wheel-container" class="genre-wheel-container">
+        <div id="genre-wheel">
+          <div id="genre-0" style="transform: rotate(6deg);">
+            <span>Документальный</span>
+          </div>
+          <div id="genre-1" style="transform: rotate(31.71deg);">
+            <span>Анимационные</span>
+          </div>
+          <div id="genre-2" style="transform: rotate(57.42deg);">
+            <span>Анимационные 18+</span>
+          </div>
+          <div id="genre-3" style="transform: rotate(83.13deg);">
+            <span>Ужасы/Триллеры 18+</span>
+          </div>
+          <div id="genre-4" style="transform: rotate(108.84deg);">
+            <span>Ужасы/Триллеры</span>
+          </div>
+          <div id="genre-5" style="transform: rotate(134.55deg);">
+            <span>Комедии, 18+</span>
+          </div>
+          <div id="genre-6" style="transform: rotate(160.26deg);">
+            <span>Комедии</span>
+          </div>
+          <div id="genre-7" style="transform: rotate(185.97deg);">
+            <span>Мелодрамы/Драмы 18+</span>
+          </div>
+          <div id="genre-8" style="transform: rotate(211.68deg);">
+            <span>Мелодрамы/Драмы</span>
+          </div>
+          <div id="genre-9" style="transform: rotate(237.39deg);">
+            <span>Сериалы</span>
+          </div>
+          <div id="genre-10" style="transform: rotate(263.1deg);">
+            <span>Научно-популярные</span>
+          </div>
+          <div id="genre-11" style="transform: rotate(288.81deg);">
+            <span>Боевики 18+</span>
+          </div>
+          <div id="genre-12" style="transform: rotate(314.52deg);">
+            <span>Боевики</span>
+          </div>
+          <div id="genre-13" style="transform: rotate(340.23deg);">
+            <span>Прочее</span>
+          </div>
         </div>
-        <div id="genre-1" style="transform: rotate(25.71deg);">
-          <span>Анимационные, до 18 лет</span>
+        <div id="wheel-pointer"></div>
+        <button id="spin-button">Крутить!</button>
+      </div>
+      <div class="resultText"></div>
+      <div class="filmsWheel"></div>
+    </div>
+  </section>
+  <footer id="footer">
+    <div class="container">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h4>Источник открытых данных:</h4>
+          <p>
+            <a href="https://opendata.mkrf.ru/opendata/7705851331-register_movies" target="_blank" rel="noopener noreferrer">
+              https://opendata.mkrf.ru/opendata/<br>7705851331-register_movies
+            </a>
+          </p>
         </div>
-        <div id="genre-2" style="transform: rotate(51.42deg);">
-          <span>Анимационные, 18+</span>
+        <div class="footer-section">
+          <h4>Контакты:</h4>
+          <p>Email: <a href="mailto:matveyfalcon@gmail.com">matveyfalcon@gmail.com</a></p>
+          <p>Телефон: <a href="tel:+79851856978">+7 985 185 69 78</a></p>
         </div>
-        <div id="genre-3" style="transform: rotate(77.13deg);">
-          <span>Ужасы/Триллеры, 18+</span>
-        </div>
-        <div id="genre-4" style="transform: rotate(102.84deg);">
-          <span>Ужасы/Триллеры, до 18 лет</span>
-        </div>
-        <div id="genre-5" style="transform: rotate(128.55deg);">
-          <span>Комедии, 18+</span>
-        </div>
-        <div id="genre-6" style="transform: rotate(154.26deg);">
-          <span>Комедии, до 18 лет</span>
-        </div>
-        <div id="genre-7" style="transform: rotate(179.97deg);">
-          <span>Мелодрамы/Драмы, 18+</span>
-        </div>
-        <div id="genre-8" style="transform: rotate(205.68deg);">
-          <span>Мелодрамы/Драмы, до 18 лет</span>
-        </div>
-        <div id="genre-9" style="transform: rotate(231.39deg);">
-          <span>Сериалы</span>
-        </div>
-        <div id="genre-10" style="transform: rotate(257.1deg);">
-          <span>Научно-популярные</span>
-        </div>
-        <div id="genre-11" style="transform: rotate(282.81deg);">
-          <span>Боевики, 18+</span>
-        </div>
-        <div id="genre-12" style="transform: rotate(308.52deg);">
-          <span>Боевики, до 18 лет</span>
-        </div>
-        <div id="genre-13" style="transform: rotate(334.23deg);">
-          <span>Прочее</span>
+        <div style="margin-right: 0px;">
+          <div class="footer-section">
+            <h4>Я в соцсетях:</h4>
+            <div class="social-icons">
+              <a href="https://vk.com/sokolstylz" target="_blank" aria-label="VK">
+                <img src="images/vk.svg" alt="VK">
+              </a>
+              <a href="https://t.me/sokolstylz" target="_blank" aria-label="Telegram">
+                <img src="images/tg.svg" alt="Telegram">
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-      <div id="wheel-pointer"></div>
-      <button id="spin-button">Крутить</button>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Подборка фильмов. Все права защищены.</p>
+      </div>
     </div>
-    <div class="filmsWheel">
-      <div id="film-cards-container" class="film-cards-container"></div>
-    </div>
-  </div>
-</section>
-
-
-
-
-
-
+  </footer>
+  <script src="js/collections.js"></script>
   <script src="js/main.js"></script>
 </body>
 

@@ -25,6 +25,7 @@ body {
   color: #666;
   font-size: 18px;
   margin-top: 50px;
+  margin-bottom: 290px;
   opacity: 0;
   animation: fadeInUp 1.5s ease-in-out 1s forwards;
 }
@@ -96,14 +97,20 @@ body {
   transform: scale(1.05);
 }
 
+.back-button:active {
+  transform: scale(1); /* Сжатие при нажатии */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.1s ease,
+    transform 0.1s ease;
+}
+
 /* Основное содержимое */
 .content {
-  margin: 25px auto 20px; /* Отступ от фиксированной шапки */
+  margin: 25px auto 150px; /* Отступ от фиксированной шапки */
   max-width: 100%;
   width: 1158px;
   padding: 20px;
   box-sizing: border-box;
-  margin-bottom: 100px;
 }
 
 /* Заголовок рекомендаций */
@@ -397,4 +404,129 @@ body {
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+footer {
+  background-color: #1a1a1a;
+  color: #f5f5f5;
+  padding: 40px 20px;
+  font-size: 14px;
+  bottom: 0;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-section {
+  flex: 1 1 calc(25% - 20px);
+  margin: 10px;
+  
+}
+
+.footer-section h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.footer-section p,
+.footer-section a {
+  color: #cfcfcf;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.footer-section a:hover {
+  color: #ffffff;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+  color: #cfcfcf;
+}
+
+.footer-section ul li a:hover {
+  color: #ffffff;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-icons a img {
+  width: 48px;
+  height: 48px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.social-icons a img:hover {
+  opacity: 0.8;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  border-top: 1px solid #333;
+  padding-top: 10px;
+  color: #808080;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+.containerfot {
+  position: relative;
+  width: 1158px;
+  max-width: 100%;
+  padding: 0 15px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+#scroll-to-top {
+  background-image: url('../images/arrow-up.svg');
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+  width: 80px; /* Задайте нужный размер иконки */
+  height: 80px;
+  border-radius: 50%;
+  z-index: 1000;
+  opacity: 0; /* Скрыта по умолчанию */
+  transform: translateY(20px); /* Уменьшена по умолчанию */
+  transition: opacity 0.5s, transform 0.5s, background-image 0.3s, box-shadow 0.7s;
+  pointer-events: none; /* Отключаем клики по скрытому элементу */
+}
+
+#scroll-to-top:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+  background-image: url('../images/arrow-up1.svg');
+}
+
+#scroll-to-top:active {
+  background-image: url('../images/arrow-up3.svg');
+  transition: background-image 0.3s;
+}
+
+#scroll-to-top.visible {
+  opacity: 1; /* Показываем элемент */
+  transform: translateY(0px); /* Уменьшена по умолчанию */
+  pointer-events: auto; /* Включаем клики */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }

@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const animatedElements = document.querySelectorAll(
-    ".text, .line, .arrow1, .sections, .plashka, .white-block h1, .line-text p, .groupFilms, .test-button, .text-login, .recommendations-title, .login-promt-button, .login-img, .login-prompt, .film-cards-container, .check-rst, .text-login1, .recommendations-title, .no-results, .attempt-title"
+    ".text, .line, .arrow1, .sections, .plashka, .white-block h1, .line-text p, .groupFilms, .test-button, .text-login, .recommendations-title, .login-promt-button, .login-img, .login-prompt, .film-cards-container, .check-rst, .text-login1, .recommendations-title, .no-results, .attempt-title, .wheel-title, .genre-wheel-container"
   );
 
   const observerOptions = {
@@ -32,6 +32,62 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// Получаем элемент кнопки
+const scrollToTopButton = document.getElementById("scroll-to-top");
+
+// Флаг для предотвращения лишних операций
+let isVisible = false;
+
+// Функция для показа кнопки
+function showButton() {
+  if (!isVisible) {
+    scrollToTopButton.style.display = "block"; // Устанавливаем display: block
+    setTimeout(() => {
+      scrollToTopButton.classList.add("visible"); // Добавляем класс для анимации
+    }, 500);
+    isVisible = true;
+  }
+}
+
+// Функция для скрытия кнопки
+function hideButton() {
+  if (isVisible) {
+    scrollToTopButton.classList.remove("visible"); // Убираем класс для анимации
+    setTimeout(() => {
+      scrollToTopButton.style.display = "none"; // Устанавливаем display: none после завершения анимации
+    }, 500); // Совпадает с длительностью анимации
+    isVisible = false;
+  }
+}
+
+// Слушаем прокрутку страницы
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 200) {
+    showButton();
+  }
+  if (window.scrollY == 0) {
+    hideButton();
+  }
+});
+
+// Обработчик клика по кнопке
+scrollToTopButton.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+
+  // Принудительное скрытие кнопки после нажатия
+  hideButton();
+
+  // Обрабатываем быстрый скролл вниз после клика
+  setTimeout(() => {
+    if (window.scrollY > 200) {
+      showButton();
+    }
+  }, 400); // Ждем завершения плавной прокрутки
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   const allFilms = [...document.querySelectorAll(".film-card")];
   const filmContainer = document.querySelector(".film-cards-container");
@@ -41,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const initialFilmsToShow = 6; // Количество фильмов по умолчанию
 
   let collapseButton = null; // Кнопка "Свернуть все"
+  let collapseButtonContainer = null; // Контейнер для кнопки
 
   // Функция показа фильмов
   function showFilms(count) {
@@ -65,18 +122,34 @@ document.addEventListener("DOMContentLoaded", () => {
   function addCollapseButton() {
     if (collapseButton) return; // Проверяем, что кнопка уже существует
 
+    // Создаем контейнер для кнопки и добавляем его в DOM
+    collapseButtonContainer = document.createElement("div");
+    collapseButtonContainer.className = "collapse-button-container";
+
     collapseButton = document.createElement("button");
     collapseButton.textContent = "Свернуть все";
     collapseButton.className = "collapse-button";
 
-    // Добавляем кнопку "Свернуть все" непосредственно в тело документа
-    document.body.appendChild(collapseButton);
+    // Добавляем кнопку в контейнер
+    collapseButtonContainer.appendChild(collapseButton);
+
+    // Добавляем контейнер с кнопкой после контейнера фильмов
+    filmContainer.parentNode.appendChild(collapseButtonContainer);
+
+    // Устанавливаем родительскому контейнеру стили для центрирования содержимого
+    collapseButtonContainer.style.display = "flex";
+    collapseButtonContainer.style.justifyContent = "center";
+    collapseButtonContainer.style.alignItems = "center";
 
     collapseButton.addEventListener("click", () => {
       showFilms(initialFilmsToShow); // Возвращаем отображение первых фильмов
-      collapseButton.remove(); // Удаляем кнопку "Свернуть все"
+      collapseButtonContainer.remove(); // Удаляем кнопку "Свернуть все"
       collapseButton = null; // Обнуляем ссылку на кнопку
       loadMoreButton.style.display = "block"; // Показываем кнопку "Показать еще"
+
+      // Плавно прокручиваем к секции "recommendations"
+      const recommendationsSection = document.getElementById("recommendations");
+      recommendationsSection.scrollIntoView({ behavior: "smooth" });
     });
 
     // Добавляем анимацию для кнопки "Свернуть все"
@@ -107,7 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
 document.addEventListener("DOMContentLoaded", () => {
   fetch("backend/auth_status.php")
     .then((response) => response.json())
@@ -132,6 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const testingContent = document.getElementById("testing-content");
+  const tilte = document.querySelector(".recommendations-title");
 
   // Загружаем данные с сервера
   fetch("backend/testing_data.php")
@@ -149,6 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <a href="login.php" class="login-promt-button">Войти</a>
           </div>
         `;
+        tilte.style.marginTop = "234px";
       } else if (testScore > 0) {
         // Пользователь прошел тест хотя бы раз
         contentHTML = `
@@ -164,6 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
         `;
+        tilte.style.marginTop = "223px";
       } else {
         // Пользователь авторизован, но не прошел тест
         contentHTML = `
@@ -171,6 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <a href="testing.php" class="test-button">Пройти тестирование</a>
           </div>
         `;
+        tilte.style.marginTop = "166px";
       }
 
       // Вставляем HTML-контент
@@ -232,84 +308,98 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const wheel = document.getElementById("genre-wheel");
   const spinButton = document.getElementById("spin-button");
-  const filmCardsContainer = document.getElementById("film-cards-container");
   const pointer = document.getElementById("wheel-pointer");
+  const resultTextContainer = document.querySelector(".resultText");
   const numSections = genres.length;
   const anglePerSection = 360 / numSections;
 
-  // Начальное смещение для совмещения "Документальный" с указателем
-  //const initialOffset = -141.43; начальное значение
-  const initialOffset = -141.30;
-
-  // Текущий угол вращения (с учётом начального смещения)
+  const initialOffset = -142;
   let currentRotation = initialOffset;
+  let isSpinning = false;
 
   spinButton.addEventListener("click", async function () {
+    if (isSpinning) return;
+
+    isSpinning = true;
+    spinButton.disabled = true;
+
     const randomIndex = Math.floor(Math.random() * genres.length);
-
-    // Генерация случайного угла для остановки
-    const spins = Math.floor(Math.random() * 8) + 8; // От 8 до 15 оборотов
-    const randomOffset = Math.random() * anglePerSection; // Смещение внутри сектора
+    const spins = Math.floor(Math.random() * 2) + 2;
+    const randomOffset = Math.random() * anglePerSection;
     const finalAngle = randomIndex * anglePerSection + randomOffset;
-
-    // Итоговый угол вращения
     const totalRotation = spins * 360 + finalAngle;
 
-    // Сохраняем текущий угол
-    currentRotation = (currentRotation + totalRotation) % 360;
+    currentRotation = currentRotation + totalRotation;
 
-    // Вращение колеса с яркой анимацией и легким масштабированием
-    wheel.style.transition = "transform 2s cubic-bezier(0.25, 1, 0.5, 1.5), scale 0.5s ease-in-out";
-    wheel.style.transform = `rotate(${currentRotation}deg) scale(1.05)`;
-
-    setTimeout(() => {
-      wheel.style.transform = `rotate(${currentRotation}deg) scale(1)`;
-    }, 2000);
-
-    // Анимация стрелки при вращении
-    pointer.style.transition = "transform 0.1s ease-in-out";
-
-    let isSpinning = true;
+    wheel.style.transition = "transform 10s cubic-bezier(0.2, 1, 0.5, 1)";
+    wheel.style.transform = `rotate(${currentRotation}deg)`;
 
     const pointerAnimation = setInterval(() => {
-      if (!isSpinning) return clearInterval(pointerAnimation);
-      pointer.style.transform = "translateX(-50%) rotate(170deg) scale(1.1)";
+      pointer.style.transform = "translateX(-50%) rotate(175deg)";
       setTimeout(() => {
-        pointer.style.transform = "translateX(-50%) rotate(190deg) scale(1.1)";
+        pointer.style.transform = "translateX(-50%) rotate(175deg)";
       }, 50);
-    }, 100);
+    }, 50);
 
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+    clearInterval(pointerAnimation);
+    pointer.style.transform = "translateX(-50%) rotate(180deg)";
 
-    // Ждём завершения вращения
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const normalizedAngle =
+      (360 - ((currentRotation - initialOffset) % 360)) % 360;
+    const genreIndex = Math.floor(
+      ((normalizedAngle + anglePerSection / 2) % 360) / anglePerSection
+    );
 
-    // Останавливаем движение стрелки
-    isSpinning = false;
-    pointer.style.transition = "transform 0.2s ease-out";
-    pointer.style.transform = "translateX(-50%) rotate(180deg) scale(1)"; // Возврат в исходное положение
-
-
-    // Нормализация угла для получения жанра
-    const normalizedAngle = (360 - ((currentRotation - initialOffset) % 360)) % 360;
-    const genreIndex = Math.floor((normalizedAngle + anglePerSection / 2) % 360 / anglePerSection);
-
-    // Получаем выпавший жанр
     const resultGenre = genres[genreIndex];
 
-    alert(`Выпал жанр: ${resultGenre}`);
+    // Удаляем предыдущий результат, если он существует
+    const existingResult = document.getElementById("result-text");
+    if (existingResult) {
+      existingResult.remove();
+    }
+
+    // Создаём новый элемент для отображения результата
+    const resultText = document.createElement("div");
+    resultText.id = "result-text";
+    resultText.classList.add("fade-in-up");
+    resultText.textContent = `Вам выпал жанр: ${resultGenre}!`;
+
+    resultTextContainer.appendChild(resultText);
+
+    // Создание контейнера с карточками
+    let filmCardsContainer = document.querySelector(".film-cards-container1");
+    if (filmCardsContainer) {
+      // Удаляем старый контейнер, если он существует
+      filmCardsContainer.remove();
+    }
+
+    // Создаем новый контейнер
+    filmCardsContainer = document.createElement("div");
+    filmCardsContainer.id = "film-cards-container1";
+    filmCardsContainer.classList.add("film-cards-container1");
+    filmCardsContainer.style.opacity = 0; // Начальное состояние для анимации
+    document.querySelector(".filmsWheel").appendChild(filmCardsContainer);
+
+    // Добавляем анимацию контейнера
+    setTimeout(() => {
+      filmCardsContainer.classList.add("zoom-in-animation");
+      filmCardsContainer.style.opacity = 1; // Устанавливаем видимость
+    }, 50);
 
     // Загрузка фильмов
-    filmCardsContainer.innerHTML = "";
-    const cluster = genreIndex + 1; // Кластер совпадает с индексом + 1
+    const cluster = genreIndex + 1;
     const response = await fetch(`backend/genre_wheel.php?cluster=${cluster}`);
     const films = await response.json();
     const limitedFilms = films.slice(0, 6);
-    // Отображение карточек фильмов
+
     limitedFilms.forEach((film) => {
       const card = document.createElement("div");
       card.classList.add("film-card");
+
+      // Создание HTML-контента карточки фильма
       card.innerHTML = `
-        <img src="images/Заглушка.svg" alt="Заглушка">
+        <img src="images/Заглушка.svg" alt="Заглушка" style="pointer-events:none">
         <div class="film-details">
           <h3 class="film-title">${film["Название фильма"]}</h3>
           <p class="film-genre"><strong>Жанр:</strong> ${film["Аннотация"]}</p>
@@ -319,28 +409,28 @@ document.addEventListener("DOMContentLoaded", function () {
               ? `<p class="film-series"><strong>Серии:</strong> ${film["Количество серий"]}</p>`
               : `<p class="film-duration"><strong>Длительность:</strong> ${film["Продолжительность демонстрации, часы"]} ч ${film["Продолжительность демонстрации, минуты"]} мин</p>`
           }
+        </div>
+        <div class="heart-icon">
+          <img
+            src="images/${
+              addedFilms.includes(film["film_id"])
+                ? "heartZaliv.svg"
+                : "heartContr.svg"
+            }"
+            alt="Добавить в подборку"
+            id="heart-${film["film_id"]}"
+            class="heart-icon-image"
+            onclick="toggleHeart(${film["film_id"]})">
         </div>`;
       filmCardsContainer.appendChild(card);
-    });
-  });
 
-  // Эффект пульсации кнопки
-  const style = document.createElement("style");
-  style.innerHTML = `
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-      }
-      50% {
-        transform: scale(1.1);
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-      }
-    }
-  `;
-  document.head.appendChild(style);
+      // Анимация появления карточек
+      filmCardsContainer.style.animation = `zoomIn 1.2s ease-in-out`;
+    });
+
+    isSpinning = false;
+    spinButton.disabled = false;
+  });
 });
+
+//const initialOffset = -141.43; начальное значение

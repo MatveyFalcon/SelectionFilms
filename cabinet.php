@@ -1,15 +1,12 @@
 <?php
 require 'backend/db.php';
 
-// Проверяем, авторизован ли пользователь
 if (!isset($_SESSION['user'])) {
     header("Location: login.html");
     exit();
 }
 
 $userId = $_SESSION['user'];
-
-// Получение подборок пользователя с детальной информацией о фильмах
 $query = $mysql->prepare("
     SELECT 
         c.id AS collection_id, 
@@ -33,8 +30,6 @@ $query = $mysql->prepare("
 $query->bind_param('i', $userId);
 $query->execute();
 $result = $query->get_result();
-
-// Формируем массив подборок
 $collections = [];
 while ($row = $result->fetch_assoc()) {
     $collectionId = $row['collection_id'];
@@ -54,7 +49,6 @@ while ($row = $result->fetch_assoc()) {
         ];
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -65,11 +59,10 @@ while ($row = $result->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Личный кабинет</title>
     <link rel="stylesheet" href="styles/cabinet.css">
-    <script src="js/results.js"></script>
-    <script src="js/collections.js"></script>
 </head>
 
 <body>
+    <div id="scroll-to-top" alt="Scroll to top" style="display: none;"></div>
     <div class="header">
         <div class="container">
             <a href="index.php" class="logo-link">
@@ -80,14 +73,13 @@ while ($row = $result->fetch_assoc()) {
     </div>
 
     <?php
-    require 'backend/get_added_films.php'; // Подключаем новый файл
+    require 'backend/get_added_films.php';
 
-    $addedFilms = getAddedFilms($mysql, $userId); // Получаем добавленные фильмы
+    $addedFilms = getAddedFilms($mysql, $userId);
     ?>
 
     <main class="content">
         <h1 class="recommendations-title">МОИ ПОДБОРКИ</h1>
-
         <section class="collections">
             <?php if (!empty($collections)): ?>
                 <?php foreach ($collections as $collectionId => $collection): ?>
@@ -99,7 +91,7 @@ while ($row = $result->fetch_assoc()) {
                         <?php if (!empty($collection['films'])): ?>
                             <div class="film-cards-container">
                                 <?php foreach ($collection['films'] as $film): ?>
-                                    <?php if (isset($film['id'])): // Проверяем наличие film_id 
+                                    <?php if (isset($film['id'])):
                                     ?>
                                         <div class="film-card" id="film-card-<?= htmlspecialchars($film['id']) ?>">
                                             <img src="images/Заглушка1.svg" alt="Заглушка" style="pointer-events: none;">
@@ -130,10 +122,47 @@ while ($row = $result->fetch_assoc()) {
             <?php else: ?>
                 <p class="no-collections">У вас пока нет подборок.</p>
             <?php endif; ?>
-
         </section>
-
     </main>
+
+    <footer>
+        <div class="containerfot">
+
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h4>Источник открытых данных:</h4>
+                    <p>
+                        <a href="https://opendata.mkrf.ru/opendata/7705851331-register_movies" target="_blank" rel="noopener noreferrer">
+                            https://opendata.mkrf.ru/opendata/<br>7705851331-register_movies
+                        </a>
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты:</h4>
+                    <p>Email: <a href="mailto:matveyfalcon@gmail.com">matveyfalcon@gmail.com</a></p>
+                    <p>Телефон: <a href="tel:+79851856978">+7 985 185 69 78</a></p>
+                </div>
+                <div style="margin-right: 0px;">
+                    <div class="footer-section">
+                        <h4>Я в соцсетях:</h4>
+                        <div class="social-icons">
+                            <a href="https://vk.com/sokolstylz" target="_blank" aria-label="VK">
+                                <img src="images/vk.svg" alt="VK">
+                            </a>
+                            <a href="https://t.me/sokolstylz" target="_blank" aria-label="Telegram">
+                                <img src="images/tg.svg" alt="Telegram">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Подборка фильмов. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="js/results.js"></script>
+    <script src="js/collections.js"></script>
 </body>
 
 </html>

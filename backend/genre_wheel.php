@@ -8,24 +8,17 @@ header('Content-Type: application/json');
 $cluster = $_GET['cluster'] ?? null;
 
 if ($cluster) {
-    // Получение фильмов соответствующего кластера
-    $filmQuery = $mysql->prepare("SELECT 
-            id AS film_id, 
-            `Название фильма`, 
-            Аннотация, 
-            `Вид Фильма`, 
-            `Продолжительность демонстрации, часы`, 
-            `Продолжительность демонстрации, минуты`, 
-            `Количество серий` 
-        FROM films 
-        WHERE Cluster = ? 
-        LIMIT 6");
+    // Использование хранимой процедуры для получения фильмов
+    $filmQuery = $mysql->prepare("CALL GetFilmsByClusterLimited(?)");
     $filmQuery->bind_param('i', $cluster);
     $filmQuery->execute();
     $filmResult = $filmQuery->get_result();
     $films = $filmResult->fetch_all(MYSQLI_ASSOC);
 
+    // Возвращаем результат в формате JSON
     echo json_encode($films);
 } else {
+    // Если кластер не передан, возвращаем пустой массив
     echo json_encode([]);
 }
+?>

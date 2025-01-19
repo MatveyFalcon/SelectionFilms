@@ -1,3 +1,15 @@
+// Функция для получения информации о статусе авторизации
+function checkAuthStatus() {
+  return fetch("backend/auth_status.php") // Делает запрос к auth_status.php
+    .then((response) => response.json()) // Преобразует ответ в JSON
+    .then((data) => {
+      return data.isLoggedIn; // Возвращаем информацию об авторизации
+    })
+    .catch(() => {
+      return false; // В случае ошибки возвращаем, что пользователь не авторизован
+    });
+}
+
 function openCollectionModal(filmId) {
   const modal = document.getElementById("collectionModal");
   modal.style.display = "block";
@@ -43,16 +55,25 @@ function closeCollectionModal() {
 }
 
 function toggleHeart(filmId) {
-  const heartIcons = document.querySelectorAll(`[id^="heart-${filmId}"]`);
-  const isAdded = heartIcons[0]?.src.includes("heartZaliv.svg");
+  checkAuthStatus().then((isAuthenticated) => {
+    if (!isAuthenticated) {
+      alert(
+        "Пожалуйста, авторизуйтесь, чтобы создавать подборки и добавлять фильмы в них!"
+      );
+      return;
+    }
 
-  if (isAdded) {
-    // Если фильм уже добавлен, открыть модальное окно для удаления
-    openRemoveModal(filmId);
-  } else {
-    // Если фильм не добавлен, открыть модальное окно для добавления
-    openCollectionModal(filmId);
-  }
+    const heartIcons = document.querySelectorAll(`[id^="heart-${filmId}"]`);
+    const isAdded = heartIcons[0]?.src.includes("heartZaliv.svg");
+
+    if (isAdded) {
+      // Если фильм уже добавлен, открыть модальное окно для удаления
+      openRemoveModal(filmId);
+    } else {
+      // Если фильм не добавлен, открыть модальное окно для добавления
+      openCollectionModal(filmId);
+    }
+  });
 }
 
 function openRemoveModal(filmId) {

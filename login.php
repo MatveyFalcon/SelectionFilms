@@ -24,19 +24,16 @@
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $username = $_POST['username'];
                 $password = $_POST['password'];
-
-                // Поиск пользователя в базе данных
                 $stmt = $mysql->prepare("SELECT * FROM users WHERE login = ?");
                 $stmt->bind_param('s', $username);
                 $stmt->execute();
                 $result = $stmt->get_result();
-
                 if ($result->num_rows === 1) {
                     $user = $result->fetch_assoc();
                     if (password_verify($password, $user['password'])) {
-                        $_SESSION['user'] = $user['id']; // Сохранение пользователя в сессию
+                        $_SESSION['user'] = $user['id']; 
 
-                        
+
 
                         header("Location: index.php");
                         exit();
@@ -57,6 +54,42 @@
             </form>
         </div>
     </div>
+    <footer>
+    <div class="containerfot">
+
+      <div class="footer-container">
+        <div class="footer-section">
+          <h4>Источник открытых данных:</h4>
+          <p>
+            <a href="https://opendata.mkrf.ru/opendata/7705851331-register_movies" target="_blank" rel="noopener noreferrer">
+              https://opendata.mkrf.ru/opendata/<br>7705851331-register_movies
+            </a>
+          </p>
+        </div>
+        <div class="footer-section">
+            <h4>Контакты:</h4>
+            <p>Email: <a href="mailto:matveyfalcon@gmail.com">matveyfalcon@gmail.com</a></p>
+            <p>Телефон: <a href="tel:+79851856978">+7 985 185 69 78</a></p>
+        </div>
+        <div style="margin-right: 0px;">
+          <div class="footer-section">
+            <h4>Я в соцсетях:</h4>
+            <div class="social-icons">
+              <a href="https://vk.com/sokolstylz" target="_blank" aria-label="VK">
+                <img src="images/vk.svg" alt="VK">
+              </a>
+              <a href="https://t.me/sokolstylz" target="_blank" aria-label="Telegram">
+                <img src="images/tg.svg" alt="Telegram">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Подборка фильмов. Все права защищены.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 
 </html>

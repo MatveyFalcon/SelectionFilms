@@ -32,6 +32,62 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// Получаем элемент кнопки
+const scrollToTopButton = document.getElementById("scroll-to-top");
+
+// Флаг для предотвращения лишних операций
+let isVisible = false;
+
+// Функция для показа кнопки
+function showButton() {
+  if (!isVisible) {
+    scrollToTopButton.style.display = "block"; // Устанавливаем display: block
+    setTimeout(() => {
+      scrollToTopButton.classList.add("visible"); // Добавляем класс для анимации
+    }, 500);
+    isVisible = true;
+  }
+}
+
+// Функция для скрытия кнопки
+function hideButton() {
+  if (isVisible) {
+    scrollToTopButton.classList.remove("visible"); // Убираем класс для анимации
+    setTimeout(() => {
+      scrollToTopButton.style.display = "none"; // Устанавливаем display: none после завершения анимации
+    }, 500); // Совпадает с длительностью анимации
+    isVisible = false;
+  }
+}
+
+// Слушаем прокрутку страницы
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 200) {
+    showButton();
+  }
+  if (window.scrollY == 0) {
+    hideButton();
+  }
+});
+
+// Обработчик клика по кнопке
+scrollToTopButton.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+
+  // Принудительное скрытие кнопки после нажатия
+  hideButton();
+
+  // Обрабатываем быстрый скролл вниз после клика
+  setTimeout(() => {
+    if (window.scrollY > 200) {
+      showButton();
+    }
+  }, 400); // Ждем завершения плавной прокрутки
+});
+
 // Скрипт для показа всех попыток
 function showAllAttempts() {
   document.getElementById("all-attempts").style.display = "block";

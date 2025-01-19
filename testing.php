@@ -1,7 +1,6 @@
 <?php
 require 'backend/db.php';
 
-// Проверка авторизации
 if (!isset($_SESSION['user'])) {
     header("Location: login.php");
     exit();
@@ -11,8 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Получаем данные пользователя
     $userId = $_SESSION['user'];
     $attemptNumber = 1;
-
-    // Получение последнего номера попытки и текущего score для данного пользователя
     $stmt = $mysql->prepare("SELECT MAX(attempt_number) AS last_attempt FROM testresult WHERE id = ?");
     $stmt->bind_param('i', $userId);
     $stmt->execute();
@@ -39,8 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $prodolzhitelnost = 0;
     }
 
-
-    // Вставка новой строки с увеличенным score
     $stmt = $mysql->prepare("
         INSERT INTO testresult (id, attempt_number, Cluster, Вид_Фильма, Страна_производства, Год_производства, 
                                  Количество_серий, Продолжительность_демонстрации)
@@ -59,16 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     if ($stmt->execute()) {
-        header("Location: index.php"); // Перенаправление после успешной вставки
+        header("Location: index.php");
         exit();
     } else {
         echo "Ошибка: " . $stmt->error;
     }
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -234,6 +226,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </form>
     </div>
+    <footer>
+        <div class="containerfot">
+
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h4>Источник открытых данных:</h4>
+                    <p>
+                        <a href="https://opendata.mkrf.ru/opendata/7705851331-register_movies" target="_blank" rel="noopener noreferrer">
+                            https://opendata.mkrf.ru/opendata/<br>7705851331-register_movies
+                        </a>
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты:</h4>
+                    <p>Email: <a href="mailto:matveyfalcon@gmail.com">matveyfalcon@gmail.com</a></p>
+                    <p>Телефон: <a href="tel:+79851856978">+7 985 185 69 78</a></p>
+                </div>
+                <div style="margin-right: 0px;">
+                    <div class="footer-section">
+                        <h4>Я в соцсетях:</h4>
+                        <div class="social-icons">
+                            <a href="https://vk.com/sokolstylz" target="_blank" aria-label="VK">
+                                <img src="images/vk.svg" alt="VK">
+                            </a>
+                            <a href="https://t.me/sokolstylz" target="_blank" aria-label="Telegram">
+                                <img src="images/tg.svg" alt="Telegram">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Подборка фильмов. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="js/testing.js"></script>
 </body>
