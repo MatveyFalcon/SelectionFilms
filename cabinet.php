@@ -2,34 +2,18 @@
 require 'backend/db.php';
 
 if (!isset($_SESSION['user'])) {
-    header("Location: login.html");
+    header("Location: login.php");
     exit();
 }
 
 $userId = $_SESSION['user'];
-$query = $mysql->prepare("
-    SELECT 
-        c.id AS collection_id, 
-        c.name AS collection_name, 
-        f.id AS film_id, 
-        f.`Название фильма` AS film_name, 
-        f.`Аннотация` AS film_annotation, 
-        f.`Вид Фильма` AS film_type, 
-        CASE 
-            WHEN `f`.`Количество серий` > 1 THEN 
-                CONCAT(`f`.`Количество серий`, ' серий')
-            ELSE 
-                CONCAT(`f`.`Продолжительность демонстрации, часы`, ' ч ', `f`.`Продолжительность демонстрации, минуты`, ' мин')
-        END AS `film_duration`
-    FROM collections c
-    LEFT JOIN collection_films cf ON c.id = cf.collection_id
-    LEFT JOIN films f ON cf.film_id = f.id
-    WHERE c.user_id = ?
-    ORDER BY c.created_at DESC, cf.added_at DESC
-");
+
+// Вызов хранимой процедуры
+$query = $mysql->prepare("CALL GetCollectionsAndFilms(?)");
 $query->bind_param('i', $userId);
 $query->execute();
 $result = $query->get_result();
+
 $collections = [];
 while ($row = $result->fetch_assoc()) {
     $collectionId = $row['collection_id'];
@@ -49,7 +33,15 @@ while ($row = $result->fetch_assoc()) {
         ];
     }
 }
+
+// Закрытие открытых результатов и очистка процедуры
+$result->free();
+while ($mysql->more_results()) {
+    $mysql->next_result();
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -66,7 +58,7 @@ while ($row = $result->fetch_assoc()) {
     <div class="header">
         <div class="container">
             <a href="index.php" class="logo-link">
-                <img src="images/МS.svg" alt="Логотип" class="logo" />
+                <img src="images/icon-my-index.svg" alt="Логотип" class="logo" />
             </a>
             <a href="index.php" class="back-button">Назад</a>
         </div>

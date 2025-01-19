@@ -25,7 +25,12 @@ function loadCollections() {
 
   // Отправляем запрос на сервер для получения подборок
   fetch("backend/get_collections.php")
-    .then((response) => response.json()) // Ожидаем JSON-ответ
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Ошибка сети");
+      }
+      return response.json();
+    })
     .then((data) => {
       // Очищаем текущие опции
       select.innerHTML =
@@ -40,14 +45,16 @@ function loadCollections() {
           select.appendChild(option);
         });
       } else {
-        select.innerHTML = "<option disabled>У вас нет подборок</option>";
+        select.innerHTML =
+          '<option value="" disabled>У вас нет подборок</option>';
       }
     })
     .catch((error) => {
       console.error("Ошибка загрузки подборок:", error);
-      select.innerHTML = "<option disabled>Ошибка загрузки</option>";
+      select.innerHTML = '<option value="" disabled>Ошибка загрузки</option>';
     });
 }
+
 
 function closeCollectionModal() {
   const modal = document.getElementById("collectionModal");

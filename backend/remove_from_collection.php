@@ -10,8 +10,8 @@ $userId = $_SESSION['user'];
 $filmId = $_POST['film_id'];
 $collectionId = $_POST['collection_id'];
 
-// Удаление фильма из выбранной подборки
-$query = $mysql->prepare("DELETE FROM collection_films WHERE collection_id = ? AND film_id = ?");
+// Вызов хранимой процедуры для удаления фильма из подборки
+$query = $mysql->prepare("CALL DeleteFilmFromCollection(?, ?)");
 $query->bind_param('ii', $collectionId, $filmId);
 $query->execute();
 

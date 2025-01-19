@@ -7,27 +7,31 @@ if (!isset($_SESSION['user'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Получаем данные пользователя
+    // Получаем ID пользователя
     $userId = $_SESSION['user'];
-    $attemptNumber = 1;
-    $stmt = $mysql->prepare("SELECT MAX(attempt_number) AS last_attempt FROM testresult WHERE id = ?");
+
+    // Получение последнего номера попытки с помощью процедуры GetLastAttempt
+    $stmt = $mysql->prepare("CALL GetLastAttempt(?, @lastAttempt)");
     $stmt->bind_param('i', $userId);
     $stmt->execute();
-    $result = $stmt->get_result();
 
+    // Получаем значение @lastAttempt
+    $result = $mysql->query("SELECT @lastAttempt AS lastAttempt");
+    $attemptNumber = 1; // Значение по умолчанию
     if ($row = $result->fetch_assoc()) {
-        $attemptNumber = $row['last_attempt'] + 1; // Увеличиваем номер попытки
+        $attemptNumber = (int)$row['lastAttempt'] + 1; // Увеличиваем номер попытки
     }
 
-    // Сохранение данных из формы
-    if ($_POST['vid_filma'] === 'film') {
+    // Определяем данные для вставки
+    $vid_filma = $_POST['vid_filma'];
+    if ($vid_filma === 'film') {
         $cluster = (int)$_POST['film_cluster'];
         $vid_filma = $_POST['film_vid_filma'];
         $strana = (int)$_POST['film_strana'];
         $god = (int)$_POST['film_god'];
         $prodolzhitelnost = (int)$_POST['prodolzhitelnost'];
         $kolichestvo_seriy = 0;
-    } elseif ($_POST['vid_filma'] === 'serial') {
+    } elseif ($vid_filma === 'serial') {
         $cluster = (int)$_POST['serial_cluster'];
         $vid_filma = $_POST['serial_vid_filma'];
         $strana = (int)$_POST['serial_strana'];
@@ -36,13 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $prodolzhitelnost = 0;
     }
 
-    $stmt = $mysql->prepare("
-        INSERT INTO testresult (id, attempt_number, Cluster, Вид_Фильма, Страна_производства, Год_производства, 
-                                 Количество_серий, Продолжительность_демонстрации)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ");
+    // Вызов процедуры InsertTestResult
+    $stmt = $mysql->prepare("CALL InsertTestResult(?, ?, ?, ?, ?, ?, ?, ?, @success)");
     $stmt->bind_param(
-        'iiisisii',
+        'iiisiiii',
         $userId,
         $attemptNumber,
         $cluster,
@@ -54,13 +55,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     if ($stmt->execute()) {
-        header("Location: index.php");
-        exit();
+        // Получаем значение @success
+        $result = $mysql->query("SELECT @success AS success");
+        $success = $result->fetch_assoc()['success'];
+
+        if ($success) {
+            header("Location: index.php");
+            exit();
+        } else {
+            echo "Ошибка: Не удалось сохранить данные.";
+        }
     } else {
         echo "Ошибка: " . $stmt->error;
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -76,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="header">
         <div class="container">
             <a href="index.php" class="logo-link">
-                <img src="images/МS.svg" alt="Логотип" class="logo" />
+                <img src="images/icon-my-index.svg" alt="Логотип" class="logo" />
             </a>
             <a href="index.php" class="back-button">Назад</a>
         </div>

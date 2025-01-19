@@ -80,7 +80,7 @@ $addedFilms = getAddedFilms($mysql, $userId);
     <div class="header">
         <div class="container">
             <a href="index.php" class="logo-link">
-                <img src="images/МS.svg" alt="Логотип" class="logo" />
+                <img src="images/icon-my-index.svg" alt="Логотип" class="logo" />
             </a>
             <a href="index.php" class="back-button">Назад</a>
         </div>
@@ -124,22 +124,14 @@ $addedFilms = getAddedFilms($mysql, $userId);
                 <?php foreach ($attempts as $attempt): ?>
                     <?php if ($attempt != $lastAttempt): ?>
                         <?php
-                        $previousResultsQuery = $mysql->prepare("
-                    SELECT 
-                        film_id, 
-                        film_name, 
-                        genre, 
-                        type, 
-                        duration 
-                    FROM user_attempt_results 
-                    WHERE user_id = ? AND attempt_number = ?
-                ");
+                        $previousResultsQuery = $mysql->prepare("CALL GetFilmsByAttempt(?, ?)");
                         $previousResultsQuery->bind_param('ii', $userId, $attempt);
                         $previousResultsQuery->execute();
                         $previousResults = $previousResultsQuery->get_result();
                         $previousFilms = $previousResults->fetch_all(MYSQLI_ASSOC);
                         $previousResultsQuery->close();
                         ?>
+
 
                         <h2 class="attempt-title">Попытка <?= htmlspecialchars($attempt) ?></h2>
 

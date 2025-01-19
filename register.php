@@ -11,7 +11,7 @@
 <body>
     <div class="header">
         <div class="container">
-            <img src="images/МS.svg" alt="Логотип" class="logo" />
+            <img src="images/icon-my-index.svg" alt="Логотип" class="logo" />
             <a href="index.php" class="back-button">Назад</a>
         </div>
     </div>
@@ -27,12 +27,14 @@
             $preferences = $_POST['preferences']; // Получаем текст предпочтений из формы
 
             // Проверка на существующий логин
-            $checkUser = $mysql->prepare("SELECT * FROM users WHERE login = ?");
+            $checkUser = $mysql->prepare("CALL CheckUserExists(?, @userExists)");
             $checkUser->bind_param('s', $username);
             $checkUser->execute();
-            $result = $checkUser->get_result();
 
-            if ($result->num_rows > 0) {
+            $resultCheck = $mysql->query("SELECT @userExists AS userExists");
+            $userExists = $resultCheck->fetch_assoc()['userExists'];
+
+            if ($userExists) {
                 echo "<p class='error'>Пользователь с таким логином уже существует.</p>";
             } else {
                 // Определяем кластер на основе возраста и предпочтений
@@ -67,17 +69,23 @@
                     $cluster = 1; // По умолчанию Документальный
                 }
 
-                $stmt = $mysql->prepare("INSERT INTO users (login, password, age, movie_preferences, cluster) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param('ssisi', $username, $password, $age, $preferences, $cluster);
+                // Добавление пользователя
+                $addUser = $mysql->prepare("CALL AddUser(?, ?, ?, ?, ?, @success)");
+                $addUser->bind_param('ssisi', $username, $password, $age, $preferences, $cluster);
+                $addUser->execute();
 
-                if ($stmt->execute()) {
+                $resultAdd = $mysql->query("SELECT @success AS success");
+                $success = $resultAdd->fetch_assoc()['success'];
+
+                if ($success) {
                     echo "<p class='success'>Регистрация успешна! <a href='login.php'>Войдите</a> для продолжения.</p>";
                 } else {
-                    echo "<p class='error'>Ошибка регистрации: " . $stmt->error . "</p>";
+                    echo "<p class='error'>Ошибка регистрации.</p>";
                 }
             }
         }
         ?>
+
 
         <form action="register.php" method="POST" class="auth-form">
             <label for="username">Логин</label>

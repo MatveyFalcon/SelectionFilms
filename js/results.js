@@ -100,4 +100,8 @@ function collapseAttempts() {
   document.getElementById("all-attempts").style.display = "none";
   document.getElementById("show-all-button").style.display = "inline-block";
   document.getElementById("collapse-button").style.display = "none";
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 }

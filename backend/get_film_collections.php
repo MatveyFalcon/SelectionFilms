@@ -5,13 +5,8 @@ if (isset($_POST['film_id']) && isset($_SESSION['user'])) {
     $filmId = intval($_POST['film_id']);
     $userId = intval($_SESSION['user']);
     
-    // Запрос для получения подборок, содержащих указанный фильм
-    $query = $mysql->prepare("
-        SELECT c.id, c.name 
-        FROM collections c
-        INNER JOIN collection_films cf ON c.id = cf.collection_id
-        WHERE c.user_id = ? AND cf.film_id = ?
-    ");
+    // Вызов хранимой процедуры
+    $query = $mysql->prepare("CALL GetCollectionsByFilm(?, ?)");
     $query->bind_param('ii', $userId, $filmId);
     $query->execute();
     $result = $query->get_result();

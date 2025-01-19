@@ -11,25 +11,27 @@ $filmId = $_POST['film_id'];
 $collectionId = $_POST['collection_id'];
 $newCollectionName = $_POST['new_collection'];
 
-
-if ($newCollectionName) {
-    // Создать новую подборку
-    $query = $mysql->prepare("INSERT INTO collections (user_id, name) VALUES (?, ?)");
-    $query->bind_param('is', $userId, $newCollectionName);
-    $query->execute();
-    $collectionId = $mysql->insert_id;
-}
-
-// Добавить фильм в подборку
-$query = $mysql->prepare("INSERT INTO collection_films (collection_id, film_id) VALUES (?, ?)");
-$query->bind_param('ii', $collectionId, $filmId);
-$query->execute();
-
 if (empty($filmId) || (empty($collectionId) && empty($newCollectionName))) {
     http_response_code(400); // Неправильный запрос
     exit('Недостаточно данных');
 }
 
+if ($newCollectionName) {
+    // Вызов процедуры для создания новой подборки
+    $query = $mysql->prepare("CALL AddCollection(?, ?, @newCollectionId)");
+    $query->bind_param('is', $userId, $newCollectionName);
+    $query->execute();
+
+    // Получение ID новой подборки
+    $result = $mysql->query("SELECT @newCollectionId AS collectionId");
+    $row = $result->fetch_assoc();
+    $collectionId = $row['collectionId'];
+}
+
+// Вызов процедуры для добавления фильма в подборку
+$query = $mysql->prepare("CALL AddFilmToCollection(?, ?)");
+$query->bind_param('ii', $collectionId, $filmId);
+$query->execute();
 
 http_response_code(200); // Возвращаем успешный код ответа
 exit();

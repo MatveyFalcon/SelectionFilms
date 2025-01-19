@@ -4,11 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FilmSok - подборка фильмов или сериалов на любой вкус!</title>
+  <title>CокТека — Подборка фильмов или сериалов на любой вкус!</title>
   <link rel="stylesheet" href="styles/styles.css" />
   <link rel="icon" href="images/icon-my.svg" type="image/svg+xml">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="js/collections.js"></script>
 </head>
 
 <body>
@@ -17,7 +15,7 @@
   <div class="banner">
     <img src="images/Фон.jpg" alt="Фон" class="background" />
     <div class="container">
-      <img src="images/МS.svg" alt="Логотип" class="logo" />
+      <img src="images/icon-my-index.svg" alt="Логотип" class="logo" />
       <div class="sections">
         <a href="#testing" class="section-link">Тестирование</a>
         <a href="#recommendations" class="section-link">Рекомендации</a>
